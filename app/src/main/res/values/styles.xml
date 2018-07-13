@@ -1,0 +1,184 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <!--<style name="AppTheme" parent="android:style/Theme.Light.NoTitleBar.Fullscreen">-->
+        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorControlNormal</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <!--水平进度条样式-->
+    <style name="TitleHorizontalProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:maxHeight">@dimen/progress_horizontal_height</item>
+        <item name="android:minHeight">@dimen/progress_horizontal_height</item>
+    </style>
+    <!-- 分割线 水平 -->
+    <style name="segment_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/segmenting_line_h</item>
+        <item name="android:background">@color/segment_line</item>
+    </style>
+    <!-- 底部所有子项所在容器-->
+    <style name="inc_bottom_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:paddingTop">@dimen/inc_bottom_container_margin_t</item>
+        <item name="android:paddingBottom">@dimen/inc_bottom_container_margin_b</item>
+    </style>
+
+    <!-- 底部单个子项容器,用于比例分配-->
+    <style name="inc_bottom_item_block">
+        <item name="android:layout_width">@dimen/linelayoutNoSize</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- 底部单个子项容器,用于在容器上居中-->
+    <style name="inc_bottom_item_ll">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+    <!-- 底部单个子项 文本-->
+    <style name="inc_bottom_item_tv">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_main_clolor</item>
+    </style>
+    <!--列表item 整块容器-->
+    <style name="recycle_itemView_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/recycle_item_bg_color</item>
+        <item name="android:paddingBottom">@dimen/recycle_itemView_padding_b</item>
+    </style>
+    <!--列表item 整块容器，配合1 凸显出一块底部颜色色差-->
+    <style name="recycle_itemView_containe2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/recycle_item_bg_color2</item>
+    </style>
+    <!--列表item 标题文本控件通用样式-->
+    <style name="recycle_itemview_titleTextView" parent="textview_marquee">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_main_clolor</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <!--列表item 标题文本控件通用样式2 字体颜色改变-->
+    <style name="recycle_itemview_titleTextView2" parent="recycle_itemview_titleTextView">
+        <item name="android:textColor">@color/recycle_item_state_text_color</item>
+    </style>
+
+    <!--列表子项 固定边距-->
+    <style name="recycle_item_margins">
+        <item name="android:layout_marginLeft">@dimen/recycle_itemView_margin_lr</item>
+        <item name="android:layout_marginRight">@dimen/recycle_itemView_margin_lr</item>
+    </style>
+    <!--列表子项 标题栏 容器-->
+    <style name="recycle_item_title_container" parent="recycle_item_margins">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/recycle_itemView_title_h</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_alignParentTop">true</item>
+    </style>
+    <!--列表子项 内容 基本样式-->
+    <style name="recycle_item_content_container" parent="recycle_item_margins">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/recycle_item_content_h</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginBottom">@dimen/recycle_item_margin_b</item>
+    </style>
+
+    <!--<item name="android:visibility">gone</item>-->
+    <style name="include_curtask_menu_btn">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">@dimen/include_curtask_menu_btn_margin</item>
+        <item name="android:padding">@dimen/include_curtask_menu_btn_margin</item>
+        <item name="android:layout_height">@dimen/include_curtask_menu_btn_h</item>
+        <item name="android:background">@drawable/btn_base_style_selector</item>
+
+    </style>
+
+    <style name="include_layout_freight_display_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/bg_freightbill_displaybox_item_shape</item>
+        <item name="android:layout_marginLeft">@dimen/freightbill_displaybox_item_margin_lr</item>
+        <item name="android:layout_marginRight">@dimen/freightbill_displaybox_item_margin_lr</item>
+        <item name="android:padding">@dimen/freightbill_displaybox_item_pandding</item>
+    </style>
+
+    <style name="include_layout_freight_layer_containe">
+        <item name="android:layout_width">@dimen/linelayoutNoSize</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="include_layout_freight_title_tv">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/text_main_clolor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="include_layout_freight_content_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <!-- tv 走马灯 请使用   tv.setSelected(true); 开启滚动-->
+    <style name="textview_marquee">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+    </style>
+
+    <style name="include_layout_freight_content_tv" parent="textview_marquee">
+        <item name="android:layout_width">@dimen/linelayoutNoSize</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_feightbill_displaybox_item_content_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">28sp</item>
+
+    </style>
+    <style name="include_layout_freight_content_unit_tv">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_main_clolor</item>
+    </style>
+
+    <style name="inc_layout_curtask_tabitem_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/inc_layout_curtask_tabitem_h</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/btn_curtask_radio_draw2_selector</item>
+        <item name="android:textColor">@drawable/btn_curtask_radio_color2_selector</item>
+        <item name="android:layout_margin">@dimen/inc_layout_curtask_tabitem_margin</item>
+    </style>
+
+
+</resources>

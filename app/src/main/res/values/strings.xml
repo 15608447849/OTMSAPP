@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">TMS</string>
+    <string name="app_index_tab_curtask">当前任务</string>
+    <string name="app_index_tab_histask">历史任务</string>
+    <string name="app_index_tab_realwarn">实时预警</string>
+    <string name="app_index_tab_freightbill">运费账单</string>
+    <string name="app_index_tab_pathtrail">路径轨迹</string>
+    <string name="login_btnt_text">登陆</string>
+    <string name="login_input_til_password">请输入密码</string>
+    <string name="login_input_til_phoneNo">请输入手机号</string>
+    <string name="histask_search_btnText">查 询</string>
+    <string name="histask_search_input_trainNo">车次号</string>
+
+    <string name="recycle_item_trainNo_text">车次号:</string>
+    <string name="histask_recycle_item_serialnumber_text">流水号:</string>
+    <string name="histask_recycle_item_transportline_text">运输线路:</string>
+    <string name="histask_recycle_item_totalbox_text">总箱数:</string>
+    <string name="histask_recycle_item_customernumber_text">客户数:</string>
+    <string name="curtask_btn_vehicleGo">车辆启程</string>
+    <string name="curtask_btn_vehicleBack">车辆返程</string>
+
+    <string name="feightUnit">元</string>
+    <string name="freightbill_displaybox_item_foreignexpense_text">异动费</string>
+    <string name="freightbill_displaybox_item_transportationcost_text">运输费</string>
+    <string name="freightbill_displaybox_item_totalcost_text">总费用</string>
+
+    <string name="histask_search_input_serialNumber">流水号</string>
+    <string name="realwarn_recycle_item_trailDeviateText">轨迹偏离正常行驶路线</string>
+    <string name="realwarn_recycle_item_tyreText">轮胎:</string>
+    <string name="realwarn_recycle_item_oilwearText">油耗:</string>
+    <string name="realwarn_recycle_item_speedText">车速:</string>
+    <string name="realwarn_recycle_item_temperatureText">温度:</string>
+    <string name="realwarn_recycle_item_temperatureRangeText">(正常范围: 20℃~36℃)</string>
+    <string name="realwarn_recycle_item_humidityText">湿度:</string>
+    <string name="realwarn_recycle_item_humidityRangeText">(正常范围: 25℃~36℃)</string>
+    <string name="curtask_rgbutton_load">装载列表</string>
+    <string name="curtask_rgbutton_unload">卸载列表</string>
+    <string name="curtask_rgbutton_recycle">回收列表</string>
+    <string name="recycle_item_curTask_detail"><![CDATA[详情>>]]></string>
+    <string name="curtask_button_abnormal">提交货差</string>
+    <string name="curtask_button_addRecyce">回收列表</string>
+
+</resources>

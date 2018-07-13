@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/recycle_itemView_container">
+    <RelativeLayout style="@style/recycle_itemView_containe2">
+        <!--标题栏-->
+        <LinearLayout
+            android:id="@+id/recycle_item_title_container"
+            style="@style/recycle_item_title_container">
+            <!--车次号 值-->
+            <TextView
+                android:id="@+id/recycle_item_tv_trainNo_value"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                style="@style/recycle_itemview_titleTextView"
+                android:text="车次号:  15600015215"
+                />
+            <!--状态-->
+            <TextView
+                android:id="@+id/recycle_item_tv_trainNo_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/recycle_itemview_titleTextView2"
+                android:text="[签收]"
+                />
+        </LinearLayout>
+        <View
+            android:id="@+id/recycle_item_title_below_segmentLine"
+            android:layout_below="@id/recycle_item_title_container"
+            style="@style/segment_line"
+            />
+        <!-- 运输线路 客户数 总箱数-->
+        <LinearLayout
+            android:id="@+id/recycle_item_content_container"
+            android:layout_below="@id/recycle_item_title_below_segmentLine"
+            style="@style/recycle_item_content_container">
+            <TextView
+                android:id="@+id/recycle_item_tv_pathAddr_value"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="长沙-广州"
+                />
+            <TextView
+                android:id="@+id/recycle_item_tv_customNo_value"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="客户数: 10"
+                />
+            <TextView
+                android:id="@+id/recycle_item_tv_boxSumNo_value"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="总箱数: 55"
+                />
+        </LinearLayout>
+        <!--分割线-->
+        <View
+            style="@style/segment_line"
+            android:layout_below="@id/recycle_item_content_container"
+            />
+    </RelativeLayout>
+</FrameLayout>

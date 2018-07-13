@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stateListAnimator="@null"
+        android:background="@color/recycle_item_bg_color">
+        <android.support.design.widget.CollapsingToolbarLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_collapseMode="parallax"
+            app:layout_collapseParallaxMultiplier="0.7">
+            <include layout="@layout/include_layout_curtask_input"/>
+            <include layout="@layout/include_layout_curtask_button"/>
+        </LinearLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+        <include layout="@layout/include_layout_curtask_actionbar"/>
+    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/include_layout_nested_recycle" />
+</android.support.design.widget.CoordinatorLayout>
+
+

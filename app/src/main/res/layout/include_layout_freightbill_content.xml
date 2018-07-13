@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--显示-->
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:background="@color/freightbill_displaybox_bg_color"
+android:paddingTop="@dimen/freightbill_displaybox_pandding_tb"
+android:paddingBottom="@dimen/freightbill_displaybox_pandding_tb">
+<!--总费用-->
+<FrameLayout style="@style/include_layout_freight_layer_containe">
+    <LinearLayout style="@style/include_layout_freight_display_container">
+        <TextView
+            android:text="@string/freightbill_displaybox_item_totalcost_text"
+            style="@style/include_layout_freight_title_tv" />
+        <LinearLayout style="@style/include_layout_freight_content_container">
+            <TextView
+                android:id="@+id/freightbill_displaybox_item_tv_totalcost"
+                style="@style/include_layout_freight_content_tv"
+                />
+            <TextView
+                android:text="@string/feightUnit"
+                style="@style/include_layout_freight_content_unit_tv" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+<!--运输费用-->
+<FrameLayout
+    style="@style/include_layout_freight_layer_containe">
+    <LinearLayout
+        style="@style/include_layout_freight_display_container"
+        >
+        <TextView
+            style="@style/include_layout_freight_title_tv"
+            android:text="@string/freightbill_displaybox_item_transportationcost_text"
+           />
+        <LinearLayout
+            style="@style/include_layout_freight_content_container">
+            <TextView
+                android:id="@+id/freightbill_displaybox_item_tv_transportationcost"
+                style="@style/include_layout_freight_content_tv"
+                />
+            <TextView
+                android:text="@string/feightUnit"
+                style="@style/include_layout_freight_content_unit_tv" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+<!--异动费用-->
+<FrameLayout
+    style="@style/include_layout_freight_layer_containe">
+    <LinearLayout
+        style="@style/include_layout_freight_display_container">
+        <TextView
+            style="@style/include_layout_freight_title_tv"
+            android:text="@string/freightbill_displaybox_item_foreignexpense_text"
+           />
+        <LinearLayout
+            style="@style/include_layout_freight_content_container">
+            <TextView
+                android:id="@+id/freightbill_displaybox_item_tv_foreignexpense"
+                style="@style/include_layout_freight_content_tv"
+                />
+            <TextView
+                android:text="@string/feightUnit"
+                style="@style/include_layout_freight_content_unit_tv" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+</LinearLayout>

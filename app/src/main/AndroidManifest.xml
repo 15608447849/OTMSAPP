@@ -1,0 +1,82 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="ping.otmsapp">
+
+
+    <!--允许程序打开网络套接字-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--允许程序设置内置sd卡的写权限-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--允许程序获取网络状态-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--允许程序访问WiFi网络信息-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--允许程序读写手机状态和身份-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--用于进行网络定位,允许程序访问CellID或WiFi热点来获取粗略的位置-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!--用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!--电源管理-->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- 震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--可以直接弹出一个系统对话框让用户直接添加app到白名单-->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <application
+        android:name=".assemblys.applications.TmsApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        >
+        <!--扫描抢-->
+        <uses-library android:required="false" android:name="android.scanner.library"/>
+        <!--高德地图-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="f88bf17c4d55e90f320e23c9d7cf39fa"/>
+
+        <!-- 高德地图定位服务 -->
+        <service android:name="com.amap.api.location.APSService"
+            android:process=":remote"/>
+        <!-- 本地定位服务 -->
+        <service android:name=".assemblys.services.server.LocationService" />
+        <!--&lt;!&ndash;心跳服务&ndash;&gt;-->
+        <!--<service android:name=".assemblys.services.DJOBService"-->
+            <!--android:permission="android.permission.BIND_JOB_SERVICE"/>-->
+        <!--心跳服务2闹钟-->
+        <service android:name=".assemblys.services.server.HeartbeatService" />
+        <!-- 入口 -->
+        <!--<scheme>://<host>:<port>/[<path>|<pathPrefix>|<pathPattern >]-->
+        <activity android:name="ping.otmsapp.assemblys.activitys.Login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.INDEX" />
+                <data android:scheme="otmsapp"  android:host="localhost" android:port="9999"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 主页 -->
+        <activity android:name="ping.otmsapp.assemblys.activitys.Index"
+            android:launchMode="singleInstance"
+            />
+        <!--详情展示-->
+        <activity android:name="ping.otmsapp.assemblys.activitys.Detail" />
+    </application>
+</manifest>

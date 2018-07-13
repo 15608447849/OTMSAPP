@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RadioGroup
+    android:id="@+id/curtask_rg_group"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <RadioButton
+        android:id="@+id/curtask_rg_rbutton_load"
+        android:text="@string/curtask_rgbutton_load"
+        style="@style/inc_layout_curtask_tabitem_style" />
+    <RadioButton
+        android:id="@+id/curtask_rg_rbutton_unload"
+        android:text="@string/curtask_rgbutton_unload"
+        style="@style/inc_layout_curtask_tabitem_style"
+       />
+</RadioGroup>

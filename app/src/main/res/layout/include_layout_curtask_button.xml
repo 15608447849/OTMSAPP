@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/curtask_button_takeOut"
+        style="@style/include_curtask_menu_btn"
+        android:text="@string/curtask_btn_vehicleGo" />
+    <Button
+        android:id="@+id/curtask_button_takeBack"
+        style="@style/include_curtask_menu_btn"
+        android:text="@string/curtask_btn_vehicleBack" />
+    <Button
+        android:id="@+id/curtask_button_abnormal"
+        style="@style/include_curtask_menu_btn"
+        android:text="@string/curtask_button_abnormal" />
+    <Button
+        android:id="@+id/curtask_button_addRecycle"
+        style="@style/include_curtask_menu_btn"
+        android:text="@string/curtask_button_addRecyce" />
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.SearchView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:iconifiedByDefault="false"
+    android:inputType="number"
+  >
+</android.support.v7.widget.SearchView>
+
+    <!--/**-->
+    <!--* 默认情况下是没提交搜索的按钮，所以用户必须在键盘上按下"enter"键来提交搜索.你可以同过setSubmitButtonEnabled(true)来添加一个提交按钮（"submit" button)-->
+    <!--* 设置true后，右边会出现一个箭头按钮。如果用户没有输入，就不会触发提交（submit）事件-->
+    <!--*/-->
+    <!--searchView.setSubmitButtonEnabled(true);-->

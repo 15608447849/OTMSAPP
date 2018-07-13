@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/recycle_itemView_container">
+    <RelativeLayout style="@style/recycle_itemView_containe2">
+        <!--标题栏-->
+        <LinearLayout
+            android:id="@+id/recycle_item_title_container"
+            style="@style/recycle_item_title_container">
+            <!--箱号-->
+            <TextView
+                android:id="@+id/recycle_item_tv_boxNo"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                style="@style/recycle_itemview_titleTextView"
+                android:text="箱号:A215551"
+                />
+            <!-- 类型 -->
+            <TextView
+                android:id="@+id/recycle_item_tv_boxState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/recycle_itemview_titleTextView2"
+                android:text="[退货箱]"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+</FrameLayout>

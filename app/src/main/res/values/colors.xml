@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorWhite">#ffffff</color>
+    <!--app主题色调 如 actionBar  toolbar等-->
+    <color name="colorPrimary">#3669c7</color>
+    <!--状态栏背景颜色-->
+    <color name="colorPrimaryDark">@color/colorPrimary</color>
+    <!-- 编辑框等控件 获取焦点后颜色-->
+    <color name="colorAccent">#4b75ba</color>
+    <!--编辑框失去焦点等颜色-->
+    <color name="colorControlNormal">@color/colorWhite</color>
+    <!--输入控件的文本颜色-->
+    <color name="textColorPrimary">#333333</color>
+    <color name="title_bg_gradient_start">@color/colorPrimary</color>
+    <color name="title_bg_gradient_stop">#4e7ed8</color>
+    <color name="segment_line">#e6e6e6</color>
+    <color name="textFontContentColor">#999999</color>
+    <color name="recycle_item_state_text_color">#5786de</color>
+    <color name="textOrBtnColor2">#3669c7</color>
+    <color name="textFontColorOther">#4b75ba</color>
+    <color name="bottom_number_tv_text">#ff0000</color>
+    <color name="textFontColorOther2">#d6d6d6</color>
+    <color name="segmentingLineColor2">#cccccc</color>
+    <color name="histask_search_block_bg_color">#f5f5f5</color>
+    <!--文本主要颜色-->
+    <color name="text_main_clolor">@color/textColorPrimary</color>
+    <color name="textHintColor">@color/segmentingLineColor2</color>
+    <color name="recycle_item_bg_color">#f5f5f5</color>
+    <color name="recycle_item_bg_color2">@color/colorWhite</color>
+    <color name="freightbill_displaybox_bg_color" >@color/histask_search_block_bg_color</color>
+    <color name="text_feightbill_displaybox_item_content_color">#e58629</color>
+    <color name="realwarn_recycle_item_tv_platenumber_color">#666666</color>
+    <color name="realwarn_recycle_item_textcolot1">#f44335</color>
+    <color name="realwarn_recycle_item_textcolot2">#999999</color>
+    <color name="btn_checked_color">#5786DE</color>
+</resources>

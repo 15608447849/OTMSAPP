@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/recycle_item_bg_color"
+    android:paddingBottom="@dimen/recycle_itemView_padding_b">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/recycle_item_bg_color2">
+        <!--title-->
+        <TextView
+            android:id="@+id/realwarn_recycle_item_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/recycle_itemView_title_h"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/recycle_itemView_margin_lr"
+            android:textSize="18sp"
+            android:textColor="@color/text_main_clolor"
+            android:text="箱号: A560118  (101-冷藏箱)"
+            android:singleLine="true"
+            android:textStyle="bold"
+            />
+        <!-- 分割线 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/segment_line"
+            android:layout_below="@id/recycle_item_title_container" />
+        <!--内容-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/realwarn_recycle_item_ll_content_margin_tb"
+            android:layout_marginBottom="@dimen/realwarn_recycle_item_ll_content_margin_tb"
+            android:layout_marginLeft="@dimen/recycle_itemView_margin_lr">
+            <!--左边 图标及箱号-->
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!--图标-->
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_realwarn_plate" />
+                    <!--车牌号-->
+                    <TextView
+                        android:id="@+id/realwarn_recycle_item_tv_platenumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/realwarn_recycle_item_tv_platenumber_color"
+                        android:textSize="16sp"
+                        android:text="湘A000000" />
+                </LinearLayout>
+            <!--右边 预警类型及值说明-->
+            <LinearLayout
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/realwarn_recycle_item_content_fl_margin_lr"
+                android:layout_marginRight="@dimen/realwarn_recycle_item_content_fl_margin_lr"
+                android:orientation="vertical">
+                <!--预警类型说明-->
+                <TextView
+                    android:id="@+id/realwarn_recycle_item_tv_warn_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="2015/10/5 16:54:54"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/realwarn_recycle_item_textcolot1"
+                    />
+                <!--预警值-->
+                <TextView
+                    android:id="@+id/realwarn_recycle_item_tv_warn_info_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="温度超高(7.8)"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="21sp"
+                    android:textColor="@color/realwarn_recycle_item_textcolot1"
+                    />
+                <!--预警值及范围-->
+                <TextView
+                    android:id="@+id/realwarn_recycle_item_tv_warn_range"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="正常:2.5-7.5"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <!--分割线-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/segment_line"
+            android:layout_below="@id/recycle_item_title_container" />
+    </LinearLayout>
+</FrameLayout>

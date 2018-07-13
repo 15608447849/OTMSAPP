@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/recycle_item_bg_color2"
+    android:orientation="vertical">
+    <!--title-->
+    <TextView
+        android:id="@+id/frg_recyclebox_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/recycle_itemView_title_h"
+        android:gravity="center"
+        style="@style/recycle_itemview_titleTextView"
+        android:text="回收列表"
+        />
+    <!--输入框-->
+    <include layout="@layout/include_layout_curtask_input"/>
+    <!--选项框-->
+    <RadioGroup
+        android:id="@+id/frg_recyclebox_radiogroup"
+        android:layout_below="@id/recycle_item_title_below_segmentLine"
+        style="@style/recycle_item_content_container">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请选择:"
+            />
+        <RadioButton
+            android:id="@+id/frg_recyclebox_type_recycle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="回收箱"
+            />
+        <RadioButton
+            android:id="@+id/frg_recyclebox_type_back"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="退货箱"
+            />
+        <RadioButton
+            android:id="@+id/frg_recyclebox_type_adjust"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="调剂箱"
+            />
+    </RadioGroup>
+    <!--箱子列表-->
+    <include layout="@layout/include_layout_recycle"/>
+</LinearLayout>

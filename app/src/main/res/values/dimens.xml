@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="linelayoutNoSize">0dp</dimen>
+    <dimen name="progress_horizontal_height">1dp</dimen>
+    <dimen name="inc_bottom_container_margin_t">5dp</dimen>
+    <dimen name="inc_bottom_container_margin_b">3dp</dimen>
+    <dimen name="login_logo_margin_b">15dp</dimen>
+    <dimen name="login_input_block_w">370dp</dimen>
+    <dimen name="login_input_block_h">200dp</dimen>
+    <dimen name="login_input_block_btn_h">50dp</dimen>
+    <dimen name="login_input_til_margin_t">5dp</dimen>
+    <dimen name="login_input_textsize">12sp</dimen>
+    <dimen name="login_input_til_et_draw_padding">4dp</dimen>
+    <dimen name="login_btn_margin_t">15dp</dimen>
+    <dimen name="login_input_til_margin_l">22dp</dimen>
+    <dimen name="login_input_til_margin_r">22dp</dimen>
+    <dimen name="title_rl_h">53dp</dimen>
+    <dimen name="title_close_btn_margin_l">9dp</dimen>
+    <dimen name="title_menu_btn_margin_r">9dp</dimen>
+    <dimen name="segmenting_line_h">1dp</dimen>
+    <dimen name="histask_search_block_w">342dp</dimen>
+    <dimen name="histask_search_block_h">29dp</dimen>
+    <dimen name="histask_search_btn_margin_b">15dp</dimen>
+    <dimen name="histask_search_input_padding_l">9dp</dimen>
+    <dimen name="histask_search_input_margin_l">10dp</dimen>
+    <dimen name="histask_search_input_margin_t">8dp</dimen>
+    <dimen name="recycle_itemView_padding_b">15dp</dimen>
+    <dimen name="recycle_itemView_title_h">60dp</dimen>
+    <dimen name="recycle_itemView_margin_lr">13dp</dimen>
+    <dimen name="recycle_item_content_h">35dp</dimen>
+    <dimen name="recycle_item_margin_b">10dp</dimen>
+    <dimen name="freightbill_displaybox_pandding_tb">24dp</dimen>
+    <dimen name="freightbill_displaybox_item_margin_lr">10dp</dimen>
+    <dimen name="freightbill_displaybox_item_pandding">4dp</dimen>
+    <dimen name="freightbill_recycle_item_ll_content_margin_t">20dp</dimen>
+    <dimen name="realwarn_recycle_item_ll_content_margin_tb">20dp</dimen>
+    <dimen name="realwarn_recycle_item_content_fl_margin_lr">34dp</dimen>
+    <dimen name="include_curtask_menu_btn_h">45dp</dimen>
+    <dimen name="include_curtask_menu_btn_margin">3dp</dimen>
+    <dimen name="inc_layout_curtask_tabitem_backgroud_stsyle_h">40dp</dimen>
+    <dimen name="inc_layout_curtask_tabitem_h">45dp</dimen>
+
+    <dimen name="inc_layout_curtask_tabitem_margin">2dp</dimen>
+    <dimen name="inc_layout_curtask_line_margin_b">5dp</dimen>
+
+</resources>

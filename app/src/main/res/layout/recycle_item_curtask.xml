@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/recycle_itemView_container">
+    <RelativeLayout
+        style="@style/recycle_itemView_containe2">
+        <LinearLayout
+            android:id="@+id/recycle_item_title_container"
+            style="@style/recycle_item_title_container">
+            <!--门店名-->
+            <TextView
+                android:id="@+id/recycle_item_tv_storeName"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                style="@style/recycle_itemview_titleTextView"
+                android:text="xxx门店"
+                />
+            <Button
+                android:id="@+id/recycle_item_tv_detail_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/recycle_itemview_titleTextView2"
+                android:text="@string/recycle_item_curTask_detail"
+                android:background="@drawable/btn_base_style_selector"
+                />
+        </LinearLayout>
+        <!--分割线-->
+        <View
+            android:id="@+id/recycle_item_title_below_segmentLine"
+            android:layout_below="@id/recycle_item_title_container"
+            style="@style/segment_line" />
+        <!--内容-->
+        <LinearLayout
+            android:id="@+id/recycle_item_content_container"
+            android:layout_below="@id/recycle_item_title_below_segmentLine"
+            style="@style/recycle_item_content_container">
+
+
+            <TextView
+                android:id="@+id/recycle_item_tv_order"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="配送顺序: 15"
+                />
+            <TextView
+                android:id="@+id/recycle_item_tv_scanState"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="已装载: [0/10]"
+                />
+
+            <ImageView
+                android:id="@+id/recycle_item_image_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/checkbox_off_background"
+                />
+        </LinearLayout>
+        <!--分割线-->
+        <View
+            style="@style/segment_line"
+            android:layout_below="@id/recycle_item_content_container"
+            />
+    </RelativeLayout>
+
+</FrameLayout>

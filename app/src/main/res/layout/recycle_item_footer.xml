@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+    <View android:layout_height="1dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@color/segmentingLineColor2"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textFontColorOther2"
+        android:text="没有更多内容了"
+        android:textSize="15sp"
+        />
+    <View android:layout_height="1dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@color/segment_line"
+        />
+</LinearLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/recycle_itemView_margin_lr"
+                android:layout_marginRight="@dimen/recycle_itemView_margin_lr"
+                android:gravity="center_vertical"
+                >
+                <!--司机姓名-->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_pathtrail_user"
+                    />
+                <TextView
+                    android:id="@+id/fragment_pathtrail_tv_user"
+                    android:layout_width="@dimen/linelayoutNoSize"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    style="@style/recycle_itemview_titleTextView"
+                    />
+                <!--车牌-->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_pathtrail_plate"
+                    />
+                <TextView
+                    android:id="@+id/fragment_pathtrail_tv_plate"
+                    android:layout_width="@dimen/linelayoutNoSize"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    style="@style/recycle_itemview_titleTextView"
+                   />
+            </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginLeft="@dimen/recycle_itemView_margin_lr"
+        android:layout_marginRight="@dimen/recycle_itemView_margin_lr"
+        >
+        <TextView
+            android:id="@+id/fragment_pathtrail_tv_address"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/recycle_itemview_titleTextView"
+            />
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/recycle_itemView_margin_lr"
+        android:layout_marginRight="@dimen/recycle_itemView_margin_lr">
+        <Switch
+            android:id="@+id/fragment_pathtrail_sw_real"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="实时"
+            />
+        <Switch
+            android:id="@+id/fragment_pathtrail_sw_correct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="纠偏"
+            />
+        <TextView
+            android:id="@+id/fragment_pathtrail_tv_speed"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/recycle_itemview_titleTextView"
+            />
+
+    </LinearLayout>
+
+
+
+</merge>

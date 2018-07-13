@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/title_rl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_rl_h"
+            android:background="@drawable/bg_title_grarient">
+            <!--老百姓logo-->
+            <ImageView
+                android:id="@+id/title_iv_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_title_logo"
+                android:layout_centerInParent="true"
+                />
+            <!--左边关闭按钮-->
+            <ImageView
+                android:id="@+id/title_iv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_power_selector"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/title_close_btn_margin_l"
+                android:visibility="gone"
+                 />
+            <!--右边菜单按钮-->
+            <ImageView
+                android:id="@+id/title_iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_arrow_back_selector"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/title_menu_btn_margin_r"
+                android:visibility="gone" />
+        </RelativeLayout>
+        <ProgressBar
+            android:id="@+id/title_progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_rl"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+
+
+

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_login">
+    <!--进度条 默认隐藏-->
+    <ProgressBar
+        android:id="@+id/login_progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    <!--logo title-->
+    <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="@dimen/linelayoutNoSize"
+       android:layout_weight="2"
+       android:gravity="center"
+       android:orientation="vertical">
+        <!-- logo image -->
+       <ImageView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@drawable/icon_title_logo"
+           android:layout_marginBottom="@dimen/login_logo_margin_b"/>
+        <!-- logo text -->
+       <TextView
+           android:id="@+id/login_tv_title"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+
+           android:textSize="24sp"
+           android:textColor="@color/colorWhite" />
+   </LinearLayout>
+    <!--登陆输入块-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/linelayoutNoSize"
+        android:layout_weight="3">
+        <!--输入框-->
+        <LinearLayout
+            android:id="@+id/login_fl"
+            android:layout_width="@dimen/login_input_block_w"
+            android:layout_height="@dimen/login_input_block_h"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/icon_login_input_bg"
+            android:orientation="vertical">
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/login_text_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/login_input_til_margin_t"
+                android:paddingLeft="@dimen/login_input_til_margin_l"
+                android:paddingRight="@dimen/login_input_til_margin_r"
+                android:textSize="@dimen/login_input_textsize"
+                app:counterEnabled="true"
+                app:counterMaxLength="11"
+                app:errorTextAppearance="@style/Theme.AppCompat">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/icon_login_phone"
+                    android:drawablePadding="@dimen/login_input_til_et_draw_padding"
+                    android:drawableStart="@drawable/icon_login_phone"
+                    android:hint="@string/login_input_til_phoneNo"
+                    android:inputType="phone"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/login_text_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/login_input_til_margin_t"
+                android:paddingLeft="@dimen/login_input_til_margin_l"
+                android:paddingRight="@dimen/login_input_til_margin_r"
+                android:textSize="@dimen/login_input_textsize"
+                app:errorTextAppearance="@style/Theme.AppCompat"
+                app:passwordToggleEnabled="true">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/icon_login_password"
+                    android:drawablePadding="@dimen/login_input_til_et_draw_padding"
+                    android:drawableStart="@drawable/icon_login_password"
+                    android:hint="@string/login_input_til_password"
+                    android:inputType="textPassword"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+        <!--登陆按钮-->
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="@dimen/login_input_block_w"
+            android:layout_height="@dimen/login_input_block_btn_h"
+            android:layout_below="@+id/login_fl"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/login_btn_margin_t"
+            android:alpha="0.5"
+            android:background="@drawable/btn_base_style_selector"
+            android:text="@string/login_btnt_text" />
+    </RelativeLayout>
+</LinearLayout>

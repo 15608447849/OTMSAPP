@@ -20,19 +20,19 @@ class IceClient private constructor() :Thread()  {
         val INSTANCE = IceClient()
     }
 
+
     private val LOOP_TIME= 30 * 1000L
     private var lastAccessTimestamp = 0L //最后接入时间
     private var idleTimeOutSeconds = 5 * 60 * 1000L//秒
-    private val hostList = arrayListOf<String>("192.168.1.241")
-    private val port ="4061"
+
+    private var host = "";
+    private var port = ""
     private var stringBuffer:StringBuffer? = null;
 
     fun getServiceInfo():String{
         if (stringBuffer==null){
             stringBuffer = StringBuffer("LBXTMS/Locator")
-            hostList.forEach {
-                stringBuffer!!.append( String.format(Locale.getDefault(),":tcp -h %s -p %s", it,port))
-            }
+            stringBuffer!!.append( String.format(Locale.getDefault(),":tcp -h %s -p %s", host,port))
         }
         return stringBuffer!!.toString()
     }
@@ -46,7 +46,11 @@ class IceClient private constructor() :Thread()  {
     init {
         //初始化
         isDaemon = true
-        start()
+    }
+
+    fun setServer(host:String?,port:String?){
+        if (host!=null) this.host = host
+        if (port!=null) this.port = port
     }
 
     //获取代理 ,强制转换类型

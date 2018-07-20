@@ -1,6 +1,14 @@
 package ping.otmsapp.zeroCIce;
 
 import android.content.Context;
+import android.os.Environment;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import cn.hy.otms.rpcproxy.appInterface.AppInterfaceServicePrx;
 import cn.hy.otms.rpcproxy.appInterface.AppSchedvech;
@@ -38,15 +46,52 @@ public class IceIo {
     }
     private IceClient iceClient;
     private IceIo(){
-        iceClient = IceClient.SingleInstance.getInstance();
+
     }
     private Context context;
     public void create(Context context){
         if (this.context==null){
             this.context = context;
+            iceClient = IceClient.SingleInstance.getInstance();
+            setServerInfo();
+            iceClient.start();
             println("初始化成功",this.context.toString());
         }
     }
+
+    private void setServerInfo() {
+        //读取配置文件
+        String host = "192.168.1.241";
+        String port = "4061";
+        try {
+            File externalFilesDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+            assert externalFilesDir!=null;
+            String configFileName = "server.config";
+            String path = externalFilesDir.toString()+ File.separator +configFileName;
+            File file = new File(path);
+            if (!file.exists()){
+               if (file.createNewFile()){
+                   FileOutputStream fos=new FileOutputStream(file);
+                   fos.write(host.getBytes());
+                   fos.write("\n".getBytes());
+                   fos.write(port.getBytes());
+                   fos.write("\n".getBytes());
+                   fos.close();
+               }
+            }else{
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+                host = br.readLine();
+                port = br.readLine();
+                br.close();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        iceClient.setServer(host,port);
+    }
+
     public void destroy(){
         this.context = null;
         iceClient.close();

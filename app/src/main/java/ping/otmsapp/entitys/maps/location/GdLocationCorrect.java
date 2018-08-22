@@ -25,8 +25,10 @@ public class GdLocationCorrect implements Closeable, TraceListener {
         void onCorrect(List<LatLng> list, int distance);
     }
 
-    private final int id  ;
+    private final int id;
+
     private final CorrectResult result;
+
     //轨迹纠偏使用
     private LBSTraceClient lbsTraceClient;
 

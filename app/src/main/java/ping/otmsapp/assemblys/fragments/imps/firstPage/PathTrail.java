@@ -152,6 +152,7 @@ public class PathTrail extends BaseFragment implements  CompoundButton.OnChecked
         });
         aMap.setOnMyLocationChangeListener(this);
         aMap.setMyLocationEnabled(true);//可触发定位并显示当前位置
+
         sLine = aMap.addPolyline(new PolylineOptions().width(10).color(Color.BLACK));
         sLine.setVisible(false);
         rLine = aMap.addPolyline(new PolylineOptions().width(10).setCustomTexture(BitmapDescriptorFactory.fromResource(R.drawable.grasp_trace_line)));

@@ -48,9 +48,6 @@ public class LocationGather implements AMapLocationListener {
         }
     }
 
-
-
-
     /**
      * 定位点回调
      * @param aMapLocation
@@ -68,12 +65,14 @@ public class LocationGather implements AMapLocationListener {
             Ms.Holder.get().error(e);
         }
     }
+
     //是否正在定位中
     public boolean getGarhering() {
         //调度对象
         TraceRecodeBean traceRecode  = getTrace();
         return traceRecode!=null && traceRecode.getRecodeState()==RECODE_ING;
     }
+
     //开始采集
     public void setGatherStart() {
         TraceRecodeBean traceRecode  = getTrace();

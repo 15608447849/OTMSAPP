@@ -34,6 +34,7 @@ public class GdMapLocation implements Closeable {
         mLocationClient.setLocationOption(mLocationOption);
         mLocationClient.setLocationListener(listener);
     }
+
     //关闭
     @Override
     public void close() throws IOException {

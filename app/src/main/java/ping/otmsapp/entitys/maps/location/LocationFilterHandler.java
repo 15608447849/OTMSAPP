@@ -75,10 +75,10 @@ public class LocationFilterHandler {
         curtLoc = aMapLocation;
         StringBuffer stringBuffer = getLocInfo(aMapLocation);
         Ms.Holder.get().fileAppend(stringBuffer.toString());
-        //如果当前 类型不符,精度过大,卫星数过低 不记录
+            //如果当前 类型不符,精度过大,卫星数过低 不记录
             if ( curtLoc.getLocationType() != AMapLocation.LOCATION_TYPE_GPS //类型不符
                     || curtLoc.getAccuracy() > 50 //精度过大
-                    || (curtLoc.getBearing() == 0 && curtLoc.getSpeed() == 0) //存在角度偏移 且非静止
+                    || (curtLoc.getBearing() == 0 && curtLoc.getSpeed() == 0) //不存在角度偏移 且静止
                     || curtLoc.getSatellites() < 4){ //卫星数过低
                 return null;
             }
@@ -89,14 +89,14 @@ public class LocationFilterHandler {
             return null;
         }
 
-        final float cDistanc = AMapUtils.calculateLineDistance(getCurLatLng(),getPrevLatLng());//距离改变量,单位米
+        final float cDistance = AMapUtils.calculateLineDistance(getCurLatLng(),getPrevLatLng());//距离改变量,单位米
         final float cBearing = Math.abs(getCurBearing() - getPrevBearing());//角度改变量
-        stringBuffer.append("距离变化:"+cDistanc+" 米\t");
+        stringBuffer.append("距离变化:"+ cDistance +" 米\t");
         stringBuffer.append("角度变化:"+cBearing+" 度\t");
 
             //如果角度改变量过小 并且 速度改变量过小
-            if ( (cDistanc > curtLoc.getAccuracy()  && cBearing < 45 )
-                    || (cDistanc<curtLoc.getAccuracy() && (cBearing > 30 && cBearing < 60 ))  ){
+            if ( (cDistance > curtLoc.getAccuracy()  && cBearing < 45 )
+                    || (cDistance <curtLoc.getAccuracy() && (cBearing > 30 && cBearing < 60 ))  ){
                 stringBuffer.append("记录.");
                 Ms.Holder.get().fileAppend(stringBuffer.toString());
             }else{
@@ -111,6 +111,6 @@ public class LocationFilterHandler {
                 curtLoc.getTime());
         prevLoc = curtLoc;
 
-        return new Tuple2<>(tloc,cDistanc);
+        return new Tuple2<>(tloc, cDistance);
     }
 }

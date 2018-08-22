@@ -54,7 +54,7 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
     private ProgressBarControl progressBarControl;//进度条
     private MemoryStoreBean memoryStore;//内存存储-数据共享块
     private IndexFragmentAttr indexFragmentAttr;//fragment绑定
-    private MyServiceConnection<LocationService.MBinder> locationConn;//连接后台服务
+    private MyServiceConnection<LocationService.MBinder> locationConn;//轨迹定位收集服务
     private MyServiceConnection<HeartbeatService.MBinder> heartbeatConn;//连接后台心跳
     private static final int GPS_SETTING_OPEN_CODE = 100;
     private boolean isShowGpsDialog = false;

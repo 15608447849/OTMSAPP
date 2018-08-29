@@ -11,7 +11,10 @@ import ping.otmsapp.entitys.dataBeans.localStore.LocalStore;
  * email: 793065165@qq.com
  */
 
-public class DispatchBeanRemoteState extends LocalStore<DispatchBeanRemoteState> {
+public class DispatchBeanRemoteState extends LocalStore {
+    /**
+     * 司机信息
+     * */
     private VehicleInfoBean vehicleInfoBean;
     /**
      * 调度信息远程状态码
@@ -73,7 +76,7 @@ public class DispatchBeanRemoteState extends LocalStore<DispatchBeanRemoteState>
 
     @NotNull
     @Override
-    public String getKey() {
-        return "调度单状态同步"+super.getKey();
+    public String selfKey() {
+        return "调度单状态同步"+super.selfKey();
     }
 }

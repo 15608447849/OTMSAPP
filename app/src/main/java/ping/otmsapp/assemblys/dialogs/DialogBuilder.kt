@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import ping.otmsapp.R
 import ping.otmsapp.entitys.interfaces.Action0
+import ping.otmsapp.entitys.interfaces.Action1
 
 /**
  * Created by lzp on 2018/3/12.
@@ -39,7 +40,8 @@ object  DialogBuilder {
 
         }
 
-    fun dialogSimple(c:Context,msg: String, action0: Action0) {
+
+    fun dialogSimple(c:Context,msg: String, sure: Action0) {
         //弹出提示
         DialogBuilder.prompt(c,
                 "提示",
@@ -47,11 +49,29 @@ object  DialogBuilder {
                 R.drawable.icon_warning,
                 "确定",
                 DialogInterface.OnClickListener { dialog, which ->
-                    action0.onAction0()
                     dialog.dismiss()
+                    sure.onAction()
                 },
                 "取消", null)
     }
 
+    fun dialogSimple(c:Context,msg: String, callback: Action1<Boolean>) {
+        //弹出提示
+        DialogBuilder.prompt(c,
+                "提示",
+                msg,
+                R.drawable.icon_warning,
+                "确定",
+                DialogInterface.OnClickListener { dialog, which ->
+                    dialog.dismiss()
+                    callback.onAction(true)
 
+                },
+                "取消",
+                DialogInterface.OnClickListener { dialog, which ->
+                    dialog.dismiss()
+                    callback.onAction(false)
+                }
+        )
+    }
 }

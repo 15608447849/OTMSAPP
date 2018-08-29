@@ -30,7 +30,7 @@ public class CurTaskRecycleRecBoxViewAdapter extends RecycleAdapterAbs<Distribut
 
     @Override
     public void onBindViewHolder(CurTaskRecycleRecBoxItem holder, int position) {
-        final int index = position;
+            final int index = position;
 
             DistributionPathBean distributionPathBean = mDatas.get(position);
             holder.storeTv.setText(distributionPathBean.getStoreName());

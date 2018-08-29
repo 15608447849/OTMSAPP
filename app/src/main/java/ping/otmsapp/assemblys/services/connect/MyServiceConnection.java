@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import ping.otmsapp.utils.Ms;
-
 /**
  * Created by user on 2018/3/8.
  * 用于连接后台服务
@@ -25,7 +23,6 @@ public class MyServiceConnection<T extends BinderAbs> implements ServiceConnecti
     private T binder;
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-//        Ms.Holder.get().info(name+" onServiceConnected "+service);
         isConnected =true;
         binder = (T)service;
         if (listener!=null){
@@ -35,14 +32,12 @@ public class MyServiceConnection<T extends BinderAbs> implements ServiceConnecti
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-//        Ms.Holder.get().info(name+" onServiceDisconnected ");
         isConnected = false;
         binder = null;
     }
 
     @Override
     public void onBindingDied(ComponentName name) {
-        Ms.Holder.get().info(name+" onBindingDied ");
         binder = null;
     }
 

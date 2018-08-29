@@ -50,12 +50,17 @@ public class MediaBean {
     }
     public void close(){
         if (mMediaPlayer != null) {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.pause();
-                mMediaPlayer.stop();
+            try {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
+                    mMediaPlayer.stop();
+                }
+            } catch (IllegalStateException ignored) {
+            }finally {
+                mMediaPlayer.release();
+                mMediaPlayer = null;
             }
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+
         }
     }
 

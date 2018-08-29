@@ -15,17 +15,22 @@ public class RecycleBoxBean {
     private String userCode;
     //回收箱 回收车次
     private long carNumber;
+    //回收箱 门店编号
+    private String storeId;
     //回收箱 回收时间
     private long time;
     //回收箱 是否同步
     private boolean isSynch = true;
 
-    public RecycleBoxBean(String boxNo, int type, String userCode, long carNumber, long time) {
+    public RecycleBoxBean(String boxNo, int type,String storeId, String userCode, long carNumber) {
+        if (boxNo==null) throw new NullPointerException("无法创建回收箱");
         this.boxNo = boxNo;
         this.type = type;
         this.userCode = userCode;
         this.carNumber = carNumber;
-        this.time = time;
+        this.storeId = storeId;
+        this.time = System.currentTimeMillis();
+
     }
 
     public String getUserCode() {
@@ -35,7 +40,6 @@ public class RecycleBoxBean {
     public void setUserCode(String userCode) {
         this.userCode = userCode;
     }
-
 
     public String getBoxNo() {
         return boxNo;
@@ -74,14 +78,26 @@ public class RecycleBoxBean {
         return isSynch;
     }
 
+    public boolean isBlank(){
+        return  boxNo.equals("");
+    }
+
     public void setSynch(boolean synch) {
         isSynch = synch;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 
     public Object getRecycleTypeString() {
         if (getType() == 1) return "回收箱";
         if (getType() == 2) return "退货箱";
-        if (getType() == 3)return "调剂箱";
+        if (getType() == 3) return "调剂箱";
         return "未知";
     }
 }

@@ -56,8 +56,8 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
     private IndexFragmentAttr indexFragmentAttr;//fragment绑定
     private MyServiceConnection<LocationService.MBinder> locationConn;//轨迹定位收集服务
     private MyServiceConnection<HeartbeatService.MBinder> heartbeatConn;//连接后台心跳
-    private static final int GPS_SETTING_OPEN_CODE = 100;
-    private boolean isShowGpsDialog = false;
+    private static final int GPS_SETTING_OPEN_CODE = 100;//设置打开GPS回调
+    private boolean isShowGpsDialog = false;//是否已经打开GPS开启的对话框
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,17 +70,16 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
         viewHolder.setOnClickListener(this);//设置点击事件
         progressBarControl = new ProgressBarControl(new Handler(),viewHolder.title.progressBar); //进度条
         vibratorBean = new VibratorBean(this);//震动控制
-        mediaBean = new MediaBean(this);
+        mediaBean = new MediaBean(this);//音乐播放
         powerBean = new PowerBean(this,getClass().getSimpleName());//电源控制
 
-        scannerThread = new ScannerThread(this);//扫描线程
+        scannerThread = new ScannerThread(this);//扫描线程-扫码枪专用
         scannerThread.setCallback(this);
         scannerThread.setContinuationMode(true);
 
         indexFragmentAttr = new IndexFragmentAttr(getFragmentManager(),viewHolder.fragmentContainer.getId());//碎片关联
         showFragment(1);
     }
-
 
 
     @Override
@@ -103,6 +102,7 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
         progressBarControl.destroy();
         super.onDestroy();
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -111,6 +111,7 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
         }
         return super.onKeyDown(keyCode, event);
     }
+
     //绑定服务
     private void bindServer() {
         if (locationConn!=null){
@@ -120,6 +121,7 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
             heartbeatConn.bind(this, this);
         }
     }
+
     //解绑服务
     private void unbindServer() {
         if (locationConn!=null){
@@ -130,10 +132,6 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
             heartbeatConn.unbind(this);
         }
     }
-
-
-
-
 
     //显示碎片 - 设置底部
     private void showFragment(int i){
@@ -160,6 +158,7 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
                 break;
         }
     }
+
     /**
      * 指定通知fragment
      * @param index

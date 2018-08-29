@@ -5,6 +5,6 @@ package ping.otmsapp.entitys.interfaces;
  * email: 793065165@qq.com
  */
 
-public interface Action0 {
-    void onAction();
+public interface Action2<A,B> {
+    void onAction(A aData,B bData);
 }

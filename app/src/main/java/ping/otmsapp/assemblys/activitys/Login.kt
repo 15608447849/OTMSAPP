@@ -3,7 +3,6 @@ package ping.otmsapp.assemblys.activitys
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,41 +10,35 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.PowerManager
 import android.provider.Settings
-import android.support.design.widget.Snackbar
 import android.view.View
-import android.widget.Toast
 import ping.otmsapp.R
 import ping.otmsapp.assemblys.dialogs.DialogBuilder
 import ping.otmsapp.entitys.dataBeans.login.LoginUserBean
+import ping.otmsapp.utils.AppUtil
 import ping.otmsapp.utils.MD5Util
 import ping.otmsapp.utils.Ms
 import ping.otmsapp.viewControls.ProgressBarControl
 import ping.otmsapp.viewHolders.activity.LoginViewHolder
 import ping.otmsapp.zeroCIce.IceIo
 import java.lang.Exception
-import java.util.*
-import java.util.regex.Pattern
 
 /**
  * Created by lzp on 2018/2/24.
- *权限与主界面选择
+ * 权限与主界面选择
  */
 class Login : Activity(), View.OnClickListener {
 
+    //当前用户
     var user: LoginUserBean? = null
 
-    private fun getPage(name: String): Intent {
-        val cls = pageMap.get(name)
-        return Intent(Intent(this@Login, cls))
-    }
-
-    private fun toActivity(actName: String) {
+    //进入主界面
+    private fun toIndex() {
         try {
-            startActivity(getPage(actName))
+            startActivity(Intent(this@Login, Index::class.java))
             finish()
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -69,7 +62,7 @@ class Login : Activity(), View.OnClickListener {
     private fun check() {
         //查看当前API等级是否大于6.0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (isIgnoreBatteryOption() && getPermissions()) {
+            if (checkPermissions()) {
                 enter()
             }
         } else {
@@ -80,12 +73,13 @@ class Login : Activity(), View.OnClickListener {
     // 进入应用
     private fun enter() {
         if (user!!.isAccess) {
-            toActivity("Index");
+            toIndex();
         }
     }
 
+    //检查权限
     @TargetApi(23)
-    private fun getPermissions(): Boolean {
+    private fun checkPermissions(): Boolean {
         if (isPermissionsDenied) {
             requestPermissions(permissions, SDK_PERMISSION_REQUEST)
             return false;
@@ -93,20 +87,15 @@ class Login : Activity(), View.OnClickListener {
         return true
     }
 
-    /**权限申请回调
+    /** 权限申请回调
      * grantResults 授权结果数组
      * permissions 权限数组
      */
     @TargetApi(23)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        Ms.Holder.get().info("授权结果: "
-                + requestCode + "\n"
-                + Arrays.toString(permissions) + "\n"
-                + Arrays.toString(grantResults))
-
         if (requestCode == SDK_PERMISSION_REQUEST) {
-            if (permissions.size == 0 || grantResults.size == 0) {
-                Toast.makeText(this, "授权检测异常", Toast.LENGTH_SHORT).show()
+            if (permissions.isEmpty() || grantResults.isEmpty()) {
+                AppUtil.toast(this@Login,"授权检测异常");
                 return
             }
             if (grantResults.isNotEmpty()) {
@@ -133,12 +122,15 @@ class Login : Activity(), View.OnClickListener {
      * 打开 APP 的详情设置
      */
     private fun openAppDetails() {
-        DialogBuilder.prompt(this,
+        DialogBuilder.prompt(
+                this,
                 "应用授权",
                 "您拒绝了相关权限,将无法正常使用,请手动授予",
                 R.drawable.ic_launcher,
-                "手动授权", DialogInterface.OnClickListener { dialog, which -> startSysSettingActivity() },
-                "退出", DialogInterface.OnClickListener { dialog, which -> finish() })
+                "手动授权",
+                DialogInterface.OnClickListener { dialog, which -> startSysSettingActivity() },
+                "退出",
+                DialogInterface.OnClickListener { dialog, which -> finish() })
     }
 
     private fun startSysSettingActivity() {
@@ -154,56 +146,9 @@ class Login : Activity(), View.OnClickListener {
     }
 
 
-    private fun startSysPowerSetting() {
-        val intent = Intent()
-        intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-        intent.data = Uri.parse("package:" + packageName)
-        startActivityForResult(intent, SDK_POWER_REQUEST);
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        if (requestCode == SDK_POWER_REQUEST) {
-            if (resultCode == RESULT_CANCELED) {
-                DialogBuilder.prompt(this,
-                        "应用授权",
-                        "请忽略系统电量优化方案",
-                        R.drawable.ic_launcher,
-                        "接受", DialogInterface.OnClickListener { dialog, which -> startSysPowerSetting() },
-                        "拒绝", DialogInterface.OnClickListener { dialog, which -> finish() })
-            } else {
-                check()
-            }
-        }
-    }
-
-
-    /**
-     * 针对M以上的Doze模式
-     *忽略电池的优化
-     * @param activity
-     */
-    fun isIgnoreBatteryOption(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                val packageName = getPackageName();
-                val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-                if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                    startSysPowerSetting()
-                    return false;
-                }
-            } catch (e: Exception) {
-                Ms.get().error(e)
-            }
-        }
-        return true;
-    }
-
     //验证手机号码
-    private fun validatePhone(phone: String?): Boolean {
-        if (phone == null) return false
-        val PHONE_PATTERN = "^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}\$"
-        return Pattern.compile(PHONE_PATTERN).matcher(phone).matches()
+    private fun validatePhone(phone: String): Boolean {
+        return phone.length == 11;
     }
 
     //验证密码
@@ -213,7 +158,7 @@ class Login : Activity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         if (progressControl!!.isShowing){
-            Snackbar.make(viewHolder!!.layoutFileRid, "正在连接中,请稍后", Snackbar.LENGTH_LONG).show()
+            AppUtil.toast(this@Login,"正在连接服务器");
             return
         }
 
@@ -223,12 +168,13 @@ class Login : Activity(), View.OnClickListener {
         //获取输入框内容
         val phone = viewHolder!!.phoneTextView.editText!!.text.toString()
         val password = viewHolder!!.passTextView.editText!!.text.toString()
+
         if (!user!!.isAccess) {
             if (!validatePhone(phone)) {
                 viewHolder!!.phoneTextView.error = "请输入正确格式的手机号码"
                 return
             } else if (!validatePassword(password)) {
-                viewHolder!!.passTextView.error = "无效密码"
+                viewHolder!!.passTextView.error = "密码长度不正确"
                 return
             }
         }
@@ -238,16 +184,19 @@ class Login : Activity(), View.OnClickListener {
         IceIo.get().pool.post {
             try {
                 val u = IceIo.get().login(phone, MD5Util.encryption(password))
-                Ms.get().printObject(u)
-                if (u!=null && u.userid != 0 && u.roleid.toInt() == LoginUserBean.driverCode) {
+                Ms.Holder.get().printObject(u)
+
+                if (u!=null && u.userid != 0 && u.roleid.toInt() == LoginUserBean.driverCode) { //司机角色码2
                    saveUser(u.userid.toString());
 
                 }else{
                     throw IllegalAccessException("用户不存在或角色不正确")
                 }
             } catch (e: Exception) {
-                Ms.get().error(e);
-                Snackbar.make(viewHolder!!.layoutFileRid, "登陆失败,用户名密码不正确或网络连接失败", Snackbar.LENGTH_LONG).show()
+                Ms.Holder.get().error(e);
+                runOnUiThread{
+                    AppUtil.toast(this@Login,"用户名密码不正确或网络不可用")
+                }
             }
             runOnUiThread {
                 progressControl!!.hideProgressBar()
@@ -279,9 +228,7 @@ class Login : Activity(), View.OnClickListener {
             Manifest.permission.ACCESS_COARSE_LOCATION, //NET LOCATION
             Manifest.permission.READ_PHONE_STATE//获取手机信息
     )
-    private val pageMap = mapOf<String, Class<out Activity>>(
-            "Index" to Index::class.java
-    )
+
     private var viewHolder: LoginViewHolder? = null
     private var progressControl: ProgressBarControl? = null
 }

@@ -8,8 +8,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
 import ping.otmsapp.R;
 import ping.otmsapp.entitys.annotations.Rid;
 import ping.otmsapp.entitys.interfaces.ViewHolderAbs;
@@ -22,10 +20,21 @@ import ping.otmsapp.viewHolders.includeLayouts.ViewHolderRecycle;
  */
 
 public class ScanRecycleBoxViewHolder extends ViewHolderAbs {
+
     public ViewHolderRecycle list;
 
-    @Rid(R.id.frg_recyclebox_title)
+    @Rid(R.id.frg_recyclebox_title_tv)
     public TextView title;
+
+    @Rid(R.id.frg_recyclebox_title_tv2)
+    public TextView address;
+
+    @Rid(R.id.frg_recyclebox_title_btn)
+    public Button addBtn;
+
+    @Rid(R.id.frg_recyclebox_title_btn2)
+    public Button selectBtn;
+
 
     @Rid(R.id.curtask_input_et)
     public EditText input;
@@ -50,5 +59,7 @@ public class ScanRecycleBoxViewHolder extends ViewHolderAbs {
     @Override
     public void setOnClickListener(View.OnClickListener listener) {
         inputBtn.setOnClickListener(listener);
+        addBtn.setOnClickListener(listener);
+        selectBtn.setOnClickListener(listener);
     }
 }

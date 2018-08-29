@@ -10,7 +10,7 @@ import ping.otmsapp.entitys.dataBeans.localStore.LocalStore;
  * email: 793065165@qq.com
  */
 
-public class TraceRecodeBeanRemoteState extends LocalStore<TraceRecodeBeanRemoteState> {
+public class TraceRecodeBeanRemoteState extends LocalStore {
     private VehicleInfoBean vehicleInfoBean;
     /**
      * 轨迹点远程标识数
@@ -42,7 +42,7 @@ public class TraceRecodeBeanRemoteState extends LocalStore<TraceRecodeBeanRemote
 
     @NotNull
     @Override
-    public String getKey() {
-        return "行驶轨迹状态同步"+super.getKey();
+    public String selfKey() {
+        return "行驶轨迹状态同步"+super.selfKey();
     }
 }

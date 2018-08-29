@@ -2,14 +2,15 @@ package ping.otmsapp.entitys.dataBeans.login;
 
 import org.jetbrains.annotations.NotNull;
 
-import ping.otmsapp.utils.LDBStoreByJson;
+import ping.otmsapp.entitys.dataBeans.localStore.DbJsonStoreAbs;
 
 /**
  * Created by lzp on 2018/3/13.
  * 登录用户信息
  */
 
-public class LoginUserBean extends LDBStoreByJson<LoginUserBean> {
+public class LoginUserBean extends DbJsonStoreAbs {
+    public static final int driverCode = 2;
     /**
      * 用户码
      * */
@@ -18,10 +19,6 @@ public class LoginUserBean extends LDBStoreByJson<LoginUserBean> {
      * 是否允许登陆,默认不允许
      */
     private boolean isAccess;
-    /**
-     * 司机角色码
-     */
-    public static final int driverCode = 2;
 
     public String getUserCode() {
         return userCode;
@@ -39,12 +36,12 @@ public class LoginUserBean extends LDBStoreByJson<LoginUserBean> {
         isAccess = access;
     }
 
-
     @NotNull
     @Override
-    public String getKey() {
-        return "当前用户登陆信息";
+    public String selfKey() {
+        return "登陆信息";
     }
+
 
 
 }

@@ -20,6 +20,7 @@ import java.util.Map;
  */
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
+    private static final String TAG = CrashHandler.class.getSimpleName();
     private CrashHandler() {
     }
     private static class Hodler{private static final CrashHandler INSTANCE = new CrashHandler(); } //CrashHandler实例
@@ -50,8 +51,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
         //收集设备参数信息
         collectDeviceInfo();
+        //打印设备信息
+        Log.e(TAG,devInfoString());
     }
-
 
     private void collectDeviceInfo() {
         try {
@@ -62,8 +64,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 String versionCode = pi.versionCode + "";
                 devInfos.put("应用信息",mContext.getPackageName()+"-"+versionName+"-"+versionCode);
             }
-        } catch (PackageManager.NameNotFoundException e) {
-        }
+        } catch (PackageManager.NameNotFoundException ignored) {}
         devInfos.put("系统生厂商", Build.BRAND);
         devInfos.put("硬件制造商", Build.MANUFACTURER);
         devInfos.put("型号", Build.MODEL);
@@ -74,7 +75,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         devInfos.put("安卓系统版本号",Build.VERSION.RELEASE);
         devInfos.put("安卓SDK",Build.VERSION.SDK_INT+"");
         devInfos.put("分辨率",mContext.getResources().getDisplayMetrics().toString());
-
     }
 
     /**
@@ -96,38 +96,38 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      */
     private boolean handleException(Throwable ex) {
         if (ex == null) return false;
-        StringBuffer sb = printDevInfo();
+        StringBuffer sb = new StringBuffer();
+        sb.append(devInfoString());
         sb.append(AppUtil.printExceptInfo(ex));
         try {
             //保存文件
-            String fileName = AppUtil.formatUTC(new Date().getTime(),null) + ".log";
+            String fileName = AppUtil.formatUTC(
+                    new Date().getTime(),
+                    "yyyyMMdd_HHmmss") + ".log";
             String filePath = mContext.getFilesDir()+File.separator+"crash";
-            File dirFile = new File(filePath);
-            if (!dirFile.exists()){
-                dirFile.mkdirs();
-            }
+            File dirFile = AppUtil.createFolder(filePath);
 
-            final String fpStr = dirFile.getCanonicalFile()+File.separator+fileName;
+            final String fpStr = dirFile.getCanonicalFile() + File.separator + fileName;
             FileOutputStream fos = new FileOutputStream(fpStr);
             fos.write(sb.toString().getBytes());
+            fos.flush();
             fos.close();
-            Log.e("捕获错误",AppUtil.printExceptInfo(ex));
-            //Toast.makeText(mContext,fpStr,Toast.LENGTH_LONG).show();
-            //发送日志 node
+            ex.printStackTrace();
+//            System.exit(-1);//结束应用程序
         } catch (IOException e) {
             return false;
         }
         return true;
     }
 
-    private StringBuffer printDevInfo() {
+    private String devInfoString() {
         StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, String> entry : devInfos.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            sb.append(key + "=" + value + "\n");
+            sb.append(key).append("=").append(value).append("\n");
         }
-        return sb;
+        return sb.toString();
     }
 
 }

@@ -1,60 +1,37 @@
 package ping.otmsapp.zeroCIce
 
 import Ice.ObjectPrx
+import Ice.Util.initialize
 import ping.otmsapp.utils.Ms
 import java.io.IOException
 import java.util.*
 
-
 @Suppress("UNCHECKED_CAST")
-open
 /**
  * Created by user on 2018/3/5.
  *  ICE 客户端
  */
-class IceClient private constructor() :Thread()  {
-    protected companion object SingleInstance{
-         fun getInstance() = Holder.INSTANCE
-    }
-    private object Holder{
-        val INSTANCE = IceClient()
-    }
-
-
+class IceClient :Thread()  {
     private val LOOP_TIME= 30 * 1000L
     private var lastAccessTimestamp = 0L //最后接入时间
-    private var idleTimeOutSeconds = 5 * 60 * 1000L//秒
+    private val idleTimeOutSeconds = 5 * 60 * 1000L//秒
+    var args:Array<String>? = null
 
-    private var host = "";
-    private var port = ""
-    private var stringBuffer:StringBuffer? = null;
-
-    fun getServiceInfo():String{
-        if (stringBuffer==null){
-            stringBuffer = StringBuffer("LBXTMS/Locator")
-            stringBuffer!!.append( String.format(Locale.getDefault(),":tcp -h %s -p %s", host,port))
-        }
-        return stringBuffer!!.toString()
+    init {
+        isDaemon = true
+        name = this.javaClass.simpleName
+        start()
     }
+
     //代理类模块存储
     private val cls2PrxMap = HashMap<Class<out Ice.ObjectPrx>, Ice.ObjectPrx>()
     //是否检测连接
     private var isLoop = true
     //IC 客户端连接
     @Volatile private var iceCommunicator: Ice.Communicator? = null
-    
-    init {
-        //初始化
-        isDaemon = true
-    }
-
-    fun setServer(host:String?,port:String?){
-        if (host!=null) this.host = host
-        if (port!=null) this.port = port
-    }
 
     //获取代理 ,强制转换类型
-    fun <T  : Ice.ObjectPrx> getServicePrx(serviceCls: Class<T>):T{
+    fun <T  : Ice.ObjectPrx> getServicePrx(serviceCls: Class<T>):T?{
             lastAccessTimestamp = System.currentTimeMillis()
             var proxy:T? = cls2PrxMap[serviceCls] as? T
             if (proxy == null) {
@@ -83,12 +60,10 @@ class IceClient private constructor() :Thread()  {
             synchronized(this) {
                 if (iceCommunicator == null) {
                     try {
-                        iceCommunicator = Ice.Util.initialize(arrayOf("--Ice.Default.Locator=" + getServiceInfo(),"--Ice.MessageSizeMax=4096"))
+                        iceCommunicator = initialize(this.args!!)
                     } catch (e: IOException) {
-                        Ms.Holder.get().error(e)
                         iceCommunicator = null
                     }
-                    Ms.Holder.get().info("ICE连接开启:"+ iceCommunicator)
                 }
             }
         }
@@ -100,7 +75,6 @@ class IceClient private constructor() :Thread()  {
         if (iceCommunicator != null){
             synchronized(this) {
                 if (iceCommunicator != null){
-                    Ms.Holder.get().info("ICE准备连接关闭:"+ iceCommunicator)
                     try {
                         iceCommunicator!!.shutdown()
                     } catch (e: Exception) {
@@ -124,6 +98,7 @@ class IceClient private constructor() :Thread()  {
             try { Thread.sleep(LOOP_TIME) } catch (e: Exception) { }
             // 最后时间 + 空闲时间 < 当前时间 ,认为长时间未使用连接.
             if (checkTimeout() ) {
+                //关闭连接
                 closeCommunicator()
             }
         }

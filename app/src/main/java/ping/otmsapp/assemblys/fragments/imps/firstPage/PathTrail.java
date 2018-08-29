@@ -285,7 +285,6 @@ public class PathTrail extends BaseFragment implements  CompoundButton.OnChecked
         while (isLoop){
             if (isVisible()){
                 TraceRecodeBean traceRecodeBean = locationGather.getTrace();
-                //Ms.Holder.get().info("获取后台轨迹记录: "+ AppUtil.javaBeanToJson(traceRecodeBean));
                 if (traceRecodeBean!=null){
                     handleTrace(traceRecodeBean);
                 }else{

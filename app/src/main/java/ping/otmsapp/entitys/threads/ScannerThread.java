@@ -91,7 +91,6 @@ public class ScannerThread extends Thread implements DecodeInfoCallBack {
 
     @Override
     public void onDecodeComplete(DecodeInfo decodeInfo) {
-//        Ms.Holder.get().info("扫描数据: "+ decodeInfo.codetype+" ,"+decodeInfo.length+" ,"+decodeInfo.barcode);
 //        mediaBean.play(R.raw.warn);
         if (callback!=null){
             callback.onScanner(decodeInfo.barcode);

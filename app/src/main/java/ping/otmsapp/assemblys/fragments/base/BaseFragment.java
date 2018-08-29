@@ -16,7 +16,6 @@ import ping.otmsapp.entitys.background.IOThreadPool;
 import ping.otmsapp.entitys.dataBeans.sys.MemoryStoreBean;
 import ping.otmsapp.entitys.interfaces.OnFragmentToActivityMessage;
 import ping.otmsapp.entitys.interfaces.ViewHolderAbs;
-import ping.otmsapp.utils.Ms;
 
 /**
  * Created by user on 2018/2/27.
@@ -44,14 +43,12 @@ public class BaseFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Ms.Holder.get().info(isPrint,"onAttach(Activity) - "+ this);
         init(activity);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Ms.Holder.get().info(isPrint,"onAttach(Context) - "+ this);
         init(context);
     }
 
@@ -72,7 +69,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Ms.Holder.get().info(isPrint,"onCreate - "+ this);
     }
     //activity - onCreate
     @Nullable
@@ -89,13 +85,11 @@ public class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Ms.Holder.get().info(isPrint,"onStart - "+ this);
     }
     //activity - onResume
     @Override
     public void onResume() {
         super.onResume();
-        Ms.Holder.get().info(isPrint,"onResume - "+ this);
         if (mActivityCallback !=null){
             mActivityCallback.onFragmentLife(this,"onResume");
         }
@@ -105,27 +99,23 @@ public class BaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Ms.Holder.get().info(isPrint,"onPause - "+ this);
     }
 
     //activity - onStop
     @Override
     public void onStop() {
         super.onStop();
-        Ms.Holder.get().info(isPrint,"onStop - "+ this);
     }
     //activity - onDestroy
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Ms.Holder.get().info(isPrint,"onDestroyView - "+ this);
     }
 
     //activity - onDestroy
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Ms.Holder.get().info(isPrint,"onDestroy - "+ this);
     }
     //activity - onDestroy
     @Override
@@ -136,7 +126,6 @@ public class BaseFragment extends Fragment {
         this.mHandler = null;
         super.onDetach();
         FM.Instance.getInstance().removeCache(getTag());//从fragment管理器的缓存中把自己删除
-        Ms.Holder.get().info(isPrint,"onDetach - "+ this);
     }
 
     /**
@@ -146,7 +135,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        Ms.Holder.get().info(isPrint,this+" >> onHiddenChanged >> "+ hidden);
         if (!hidden){
             onResume();
         }
@@ -158,18 +146,15 @@ public class BaseFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Ms.Holder.get().info(isPrint,this+" >> setUserVisibleHint >> "+ isVisibleToUser);
     }
 
     // activity - > fragment 传递消息
     public void onActivityCallback(MemoryStoreBean memoryStore){
-        Ms.Holder.get().info(isPrint,this+" >> onActivityCallback >> "+ memoryStore);
         memoryStoreBean = memoryStore;
     }
 
 
     public void onActivityCallback(String str){
-        Ms.Holder.get().info(isPrint,this+" >> onActivityCallback >> "+ str);
     }
 
     protected void toUi(Runnable r){
@@ -196,6 +181,7 @@ public class BaseFragment extends Fragment {
             }
         });
     }
+
     protected void showLongSnackBar(final ViewHolderAbs viewHolderAbs,final String s) {
         toUi(new Runnable() {
             @Override

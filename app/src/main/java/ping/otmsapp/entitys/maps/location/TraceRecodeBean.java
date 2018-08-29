@@ -15,7 +15,7 @@ import static ping.otmsapp.utils.RecodeTraceState.RECODE_WAIT;
  * 通过车辆信息构建轨迹记录对象
  */
 
-public class TraceRecodeBean extends LocalStore<TraceRecodeBean> {
+public class TraceRecodeBean extends LocalStore {
 
 
     public VehicleInfoBean getVehicleInfoBean() {
@@ -71,7 +71,7 @@ public class TraceRecodeBean extends LocalStore<TraceRecodeBean> {
 
     @NotNull
     @Override
-    public String getKey() {
-        return "行驶轨迹"+super.getKey();
+    public String selfKey() {
+        return "行驶轨迹"+super.selfKey();
     }
 }

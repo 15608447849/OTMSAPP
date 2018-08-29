@@ -11,7 +11,7 @@ import ping.otmsapp.entitys.dataBeans.localStore.LocalStore;
  * 调度信息
  */
 
-public class DispatchBean extends LocalStore<DispatchBean> {
+public class DispatchBean extends LocalStore {
     //司机,车辆信息
     private VehicleInfoBean vehicleInfoBean;
     //门店路线信息
@@ -123,7 +123,7 @@ public class DispatchBean extends LocalStore<DispatchBean> {
 
     @NotNull
     @Override
-    public String getKey() {
-        return "调度单"+super.getKey();
+    public String selfKey() {
+        return "调度单"+super.selfKey();
     }
 }

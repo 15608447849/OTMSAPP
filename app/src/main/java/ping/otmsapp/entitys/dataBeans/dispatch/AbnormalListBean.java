@@ -12,7 +12,7 @@ import ping.otmsapp.entitys.dataBeans.localStore.LocalStore;
  * 异常信息列表
  */
 
-public class AbnormalListBean extends LocalStore<AbnormalListBean> {
+public class AbnormalListBean extends LocalStore {
 
     private VehicleInfoBean vehicleInfoBean;
     private ArrayList<AbnormalBean> list;
@@ -36,7 +36,7 @@ public class AbnormalListBean extends LocalStore<AbnormalListBean> {
 
     @NotNull
     @Override
-    public String getKey() {
-        return "异常箱"+super.getKey();
+    public String selfKey() {
+        return "异常箱"+super.selfKey();
     }
 }

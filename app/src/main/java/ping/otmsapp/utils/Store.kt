@@ -10,34 +10,12 @@ import android.database.sqlite.SQLiteOpenHelper
  */
 
 //存储接口
-private interface IStore{
+interface IStore{
     fun create(context:Context)
-    fun destroy()
     fun putString(k:String,v:String)
     fun getString(k:String):String?
     fun delString(k:String)
-}
-interface IStoreData<T>{
-    fun getKey():String
-    fun getValue():String
-    fun save()
-    fun fetch():T?
-    fun remove()
-}
-abstract class LDBStoreByJson<T> : IStoreData<T>{
-    override fun getValue(): String {
-        return AppUtil.javaBeanToJson(this)
-    }
-    override fun save() {
-        DB.get().putString(getKey(),getValue())
-    }
-
-    override fun fetch(): T? {
-        val json = DB.get().getString(getKey())
-        if (json!=null) return AppUtil.jsonToJavaBean(json,this.javaClass) as T
-        return null;
-    }
-    override fun remove() { DB.get().delString(getKey()) }
+    fun destroy()
 }
 
 private val CONSTANTS_CONFIG_NAME = "otms_sp" //shaedPre 存储的文件名
@@ -46,17 +24,68 @@ private val DB_NAME ="otmsapp.db" //数据库名
 private val DB_TABLE_NAME = "storeK_V" //数据库表名
 private val DB_KEY_K = "key"
 private val DB_KEY_V = "value"
-private val DB_CREATE_SQL ="create table if not exists ${DB_TABLE_NAME} (${DB_KEY_K} text,${DB_KEY_V} text)";
+private val DB_CREATE_SQL = "create table if not exists ${DB_TABLE_NAME} (${DB_KEY_K} text,${DB_KEY_V} text)";
 private val DB_COLUMNS_ARRAY = arrayOf(DB_KEY_V)
 private val DB_SELECTION_WHERE_ARRAY = "${DB_KEY_K}=?"
 
 /**
- * 数据库
+ * SharedPreference实现
  */
+class SP private constructor():IStore {
+    companion object Holder{
+        @SuppressLint("StaticFieldLeak")
+        @Volatile private var instance: SP? = null
+        fun get(): SP {
+            if (instance == null) {
+                synchronized(SP::class) {
+                    if (instance == null) {
+                        instance = SP()
+                    }
+                }
+            }
+            return instance!!
+        }
+    }
+    private var context: Context? = null
+    override fun create(context:Context){
+        this.context = context;
+    }
+    override fun destroy(){
+        this.context = null;
+    }
+    override fun putString(k:String, v:String) {
+        val sharedPreferences = context!!.getSharedPreferences(CONSTANTS_CONFIG_NAME, Context.MODE_PRIVATE)
+        sharedPreferences.edit().apply({
+            this.putString(k,v)
+        }).apply()
+    }
+    override fun delString(k:String) {
+        val sharedPreferences = context!!.getSharedPreferences(CONSTANTS_CONFIG_NAME, Context.MODE_PRIVATE)
+        sharedPreferences.edit().apply({
+            this.remove(k)
+        }).apply()
+    }
+    override fun getString(k:String):String?{
+        val sharedPreferences = context!!.getSharedPreferences(CONSTANTS_CONFIG_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(k,null)
+    }
+}
+/** 数据库存储实现*/
 class DB private constructor() : IStore{
+    companion object Holder{
+        @Volatile private var instance: DB? = null
+        fun get():DB{
+            if (instance == null) {
+                synchronized(DB::class) {
+                    if (instance == null) {
+                        instance = DB()
+                    }
+                }
+            }
+            return instance!!
+        }
+    }
     private var sqlHelper:SQLiteOpenHelper? = null
-    private object Holder{ val INSTANCE = DB() }
-    companion object { fun get() = Holder.INSTANCE }
     override fun create(context: Context){
         sqlHelper = object :SQLiteOpenHelper(context, DB_NAME,null, DB_VERSION){
             /**
@@ -65,7 +94,6 @@ class DB private constructor() : IStore{
             override fun onCreate(db: SQLiteDatabase?) {
                 db!!.execSQL(DB_CREATE_SQL);
             }
-
             /**
              * 升级
              */
@@ -74,20 +102,19 @@ class DB private constructor() : IStore{
     }
     override fun destroy(){
         sqlHelper!!.close()
-        sqlHelper=null
+        sqlHelper = null
     }
     /**
      * 存
      */
     override fun putString(k:String,v:String){
         val value  = getString(k)
-        var sql:StringBuffer = StringBuffer();
+        var sql = StringBuffer();
         if (value==null){
             sql.append("insert into $DB_TABLE_NAME($DB_KEY_K,$DB_KEY_V) values('$k','$v')")
         }else{
             sql.append("update $DB_TABLE_NAME set $DB_KEY_V = '$v' where $DB_KEY_K = '$k'")
         }
-
         sqlHelper!!.writableDatabase.execSQL(sql.toString())
     }
     /**
@@ -128,93 +155,14 @@ class DB private constructor() : IStore{
     }
 }
 
-/**
- * 小文件存储
- */
-class SP private constructor():IStore {
-    private var context: Context? = null
-    companion object Hodler{
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        private var instance: SP? = null
-        fun get(): SP {
-            if (instance == null) {
-                synchronized(SP::class) {
-                    if (instance == null) {
-                        instance = SP()
-                    }
-                }
-            }
-            return instance!!
-        }
-    }
-     override fun create(context:Context){
-        this.context = context;
-    }
-    override fun destroy(){
-        this.context = null;
-        DB.get().destroy()
-    }
-    override fun putString(key:String, value:String) {
-        val sharedPreferences = context!!.getSharedPreferences(CONSTANTS_CONFIG_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit().apply({
-            this.putString(key,value)
-        }).apply()
-    }
-    override fun delString(key:String) {
-        val sharedPreferences = context!!.getSharedPreferences(CONSTANTS_CONFIG_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit().apply({
-            this.remove(key)
-        }).apply()
-    }
-    override fun getString(key:String):String?{
-        val sharedPreferences = context!!.getSharedPreferences(CONSTANTS_CONFIG_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.getString(key,null)
-    }
-
-
-
-
-
+//对象存储
+interface IStoreData{
+    fun selfKey():String
+    fun getValue():String
+    fun save()
+    fun <T:IStoreData?> fetch():T?
+    fun remove()
 }
 
 
-class StoreImp private constructor():IStore{
-    companion object Hodler{
-        @SuppressLint("StaticFieldLeak")
-        @Volatile
-        private var instance: StoreImp? = null
-        fun get(): StoreImp {
-            if (instance == null) {
-                synchronized(StoreImp::class) {
-                    if (instance == null) {
-                        instance = StoreImp()
-                    }
-                }
-            }
-            return instance!!
-        }
-    }
-    override fun create(context: Context) {
-        SP.get().create(context)
-        DB.get().create(context)
-    }
-
-    override fun destroy() {
-        SP.get().destroy()
-        DB.get().destroy()
-    }
-
-    override fun putString(k: String, v: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getString(k: String): String? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun delString(k: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-}
 

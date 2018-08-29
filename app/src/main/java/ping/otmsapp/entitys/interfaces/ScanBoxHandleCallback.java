@@ -28,7 +28,7 @@ public interface ScanBoxHandleCallback {
 
     void boxScannerSuccess(String scanBarNo);
 
-    void boxScanNoFount(String scanBarNo);
+    void boxScanNoFind(String scanBarNo);
 
 
     public class Adapter implements ScanBoxHandleCallback{
@@ -45,7 +45,6 @@ public interface ScanBoxHandleCallback {
 
         @Override
         public void changeDispatchState(DispatchBean dispatchBean) {
-
         }
 
         @Override
@@ -74,7 +73,7 @@ public interface ScanBoxHandleCallback {
         }
 
         @Override
-        public void boxScanNoFount(String scanBarNo) {
+        public void boxScanNoFind(String scanBarNo) {
 
         }
     }

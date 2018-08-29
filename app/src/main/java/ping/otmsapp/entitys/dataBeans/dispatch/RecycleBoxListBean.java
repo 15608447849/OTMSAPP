@@ -11,7 +11,7 @@ import ping.otmsapp.entitys.dataBeans.localStore.LocalStore;
  * email: 793065165@qq.com
  */
 
-public class RecycleBoxListBean extends LocalStore<RecycleBoxListBean> {
+public class RecycleBoxListBean extends LocalStore {
     private VehicleInfoBean vehicleInfoBean;
     private ArrayList<RecycleBoxBean> list;
     public ArrayList<RecycleBoxBean> getList() {
@@ -33,7 +33,7 @@ public class RecycleBoxListBean extends LocalStore<RecycleBoxListBean> {
 
     @NotNull
     @Override
-    public String getKey() {
-        return "回收箱"+super.getKey();
+    public String selfKey() {
+        return "回收箱"+super.selfKey();
     }
 }

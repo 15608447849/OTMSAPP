@@ -12,8 +12,8 @@ public class CacheStore<K,V>{
         void onDelete( K key, V value);
     }
 
-
     private LruCache<K,V> lruCache;
+
     private CacheStoreListener<K,V> listener;
 
     public void setListener(CacheStoreListener<K, V> listener) {
@@ -52,6 +52,7 @@ public class CacheStore<K,V>{
         }
         return false;
     }
+
     //获取
     public synchronized V get(K key){
         if (key == null){

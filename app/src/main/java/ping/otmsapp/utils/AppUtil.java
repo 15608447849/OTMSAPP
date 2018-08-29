@@ -10,8 +10,10 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationQualityReport;
@@ -20,6 +22,7 @@ import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.Contract;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -36,8 +39,10 @@ import ping.otmsapp.entitys.dataBeans.tuples.Tuple2;
  */
 
 public class AppUtil {
+
     private static SimpleDateFormat sdf = null;
 
+    //格式化时间
     public static String formatUTC(long l, String strPattern) {
         if (TextUtils.isEmpty(strPattern)) {
             strPattern = "yyyy-MM-dd HH:mm:ss";
@@ -45,14 +50,20 @@ public class AppUtil {
         if (sdf == null) {
             try {
                 sdf = new SimpleDateFormat(strPattern, Locale.CHINA);
-            } catch (Throwable e) {
-            }
+            } catch (Throwable ignored) {}
         } else {
             sdf.applyPattern(strPattern);
         }
         return sdf == null ? "NULL" : sdf.format(l);
     }
-
+    //创建文件夹
+    public static File createFolder(String filePath){
+        File dirFile = new File(filePath);
+        if (!dirFile.exists()){
+            dirFile.mkdirs();
+        }
+        return dirFile;
+    }
     /**
      * @param context 上下文
      * @return 仅仅是用来判断网络连接
@@ -68,6 +79,7 @@ public class AppUtil {
         }
         return false;
     }
+
     //是否打开wifi
     public static boolean isOpenWifi(Context context) {
         WifiManager mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -247,9 +259,10 @@ public class AppUtil {
      * @param context
      * @return true 表示开启
      */
-    public static final boolean isOenGPS(final Context context) {
+    public static boolean isOenGPS(final Context context) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        assert locationManager != null;
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
 
@@ -259,5 +272,10 @@ public class AppUtil {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setDataAndType(Uri.parse("file://"+apkPath),"application/vnd.android.package-archive");
             context.startActivity(intent);
+    }
+
+    public static void toast(@NonNull Context context, @NonNull String message){
+        if (!checkUIThread() ) return;
+        Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
     }
 }

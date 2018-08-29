@@ -35,10 +35,10 @@ public class CurTaskRecycleItem extends AutoRecycleViewHolder {
         super(itemView);
     }
 
-    public void setCheck(){
+    public void setCheckImg(){
         checkBoxImg.setImageResource(android.R.drawable.checkbox_on_background);
     }
-    public void setUncheck(){
+    public void setUnCheckImg(){
         checkBoxImg.setImageResource(android.R.drawable.checkbox_off_background);
     }
 

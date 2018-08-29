@@ -17,6 +17,7 @@ import ping.otmsapp.R;
 import ping.otmsapp.assemblys.dialogs.DialogBuilder;
 import ping.otmsapp.assemblys.fragments.base.BaseFragment;
 import ping.otmsapp.entitys.apps.MediaBean;
+import ping.otmsapp.entitys.dataBeans.dispatch.BoxBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.DispatchBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.DistributionPathBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.ScannerBoxHandleBean;
@@ -30,6 +31,8 @@ import ping.otmsapp.utils.Ms;
 import ping.otmsapp.viewAdpters.first.CurTaskRecycleViewAdapter;
 import ping.otmsapp.viewHolders.fragments.first.CurTaskViewHolder;
 
+import static ping.otmsapp.utils.STATE.BOX_DEAL_LOAD;
+import static ping.otmsapp.utils.STATE.BOX_DEAL_UNLOAD;
 import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_BACK;
 import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_COMPLETE;
 import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_LOAD;
@@ -52,6 +55,9 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
     private MediaBean mediaBean;//音乐播放
     private LocationGather locationGather;//轨迹采集
 
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +77,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         }
         return viewHolder.getLayoutFileRid();
     }
+
     @Override
     public void onDestroyView() {
         scanHandle.setScanBoxHandleCallback(null);
@@ -80,6 +87,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         viewHolder = null;
         super.onDestroyView();
     }
+
     /**
      * tab 选中改变回调
      */
@@ -88,6 +96,35 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         if (curRadioButtonId == checkedId) return;
         curRadioButtonId = checkedId;
         onRefreshList();
+    }
+    private void toUnloadState(){
+
+        DispatchBean d = scanHandle.getDispatchBean();
+        for (DistributionPathBean store : d.getDistributionPathBean()){
+            for (BoxBean box : store.getBoxNoList()){
+                box.setState(BOX_DEAL_UNLOAD);
+            }
+            store.setState(STORE_DEAL_UNLOAD);
+            store.setUnloadScanIndex(0);
+
+        }
+        d.setUnloadScanBoxIndex(0);
+        d.setState(DISPATCH_DEAL_UNLOAD);
+        d.save();
+    }
+
+    private void toLoadState(){
+        DispatchBean d = scanHandle.getDispatchBean();
+        for (DistributionPathBean store : d.getDistributionPathBean()){
+            for (BoxBean box : store.getBoxNoList()){
+                box.setState(BOX_DEAL_LOAD);
+            }
+            store.setState(STORE_DEAL_LOAD);
+            store.setLoadScanIndex(0);
+        }
+        d.setLoadScanBoxIndex(0);
+        d.setState(DISPATCH_DEAL_LOAD);
+        d.save();
     }
     /**
      * 按钮点击
@@ -103,18 +140,21 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
             AppUtil.hideSoftInputFromWindow((Activity) mContext);
             final String boxNo = viewHolder.inputEt.getText().toString();
             if (!TextUtils.isEmpty(boxNo)){
-                pool.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        scanner(boxNo);
-                    }
-                });
+                if (boxNo.equals("1")){
+                    toLoadState();
+                    return;
+                }
+//                if (boxNo.equals("2")){
+//                    toUnloadState();
+//                    return;
+//                }
+                scanner(boxNo);
                 viewHolder.inputEt.setText("");
             }
         }else if (vid == viewHolder.takeOut.getId()) {
             DialogBuilder.INSTANCE.dialogSimple(mContext, "启程将开启GPS定位,确定准备好了吗?", new Action0() {
                 @Override
-                public void onAction0() {
+                public void onAction() {
                     pool.post(new Runnable() {
                         @Override
                         public void run() {
@@ -128,7 +168,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         }else if (vid == viewHolder.abnormal.getId()) {
             DialogBuilder.INSTANCE.dialogSimple(mContext, "货物遗失或损坏无法正常签收?", new Action0() {
                 @Override
-                public void onAction0() {
+                public void onAction() {
                     pool.post(new Runnable() {
                         @Override
                         public void run() {
@@ -143,7 +183,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         } else if (vid == viewHolder.back.getId()) {
             DialogBuilder.INSTANCE.dialogSimple(mContext, "将结束本次行程,确定您已成功返回仓库?", new Action0() {
                 @Override
-                public void onAction0() {
+                public void onAction() {
                     pool.post(new Runnable() {
                         @Override
                         public void run() {
@@ -159,6 +199,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
             startFragment(8);
         }
     }
+
     /**
      * 刷新列表
      */
@@ -168,27 +209,30 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
             public void run() {
                 try {
                     lock.lock();
-                    //扫描集装箱
-                    handlerBoxTask();
+                    //list show
+                    listDisplayData();
                 } finally {
                     lock.unlock();
                 }
             }
         });
     }
-    //扫描集装箱
-    private void handlerBoxTask() {
+    //集装箱 列表 显示
+    private void listDisplayData() {
         adapter.clearAll(); //清空适配器
         if (scanHandle.isDispatchExist()) {
+
             final DispatchBean dispatchBean = scanHandle.getDispatchBean();
+            int state = dispatchBean.getState();
+            adapter.setCurrentType(state);
             List<DistributionPathBean> list = dispatchBean.getDistributionPathBean();//获取门店对象
             if (curRadioButtonId == viewHolder.load.getId()) {
-                filed(list,STORE_DEAL_LOAD);
-                adapter.setShowType(1);
+//                filter(list,STORE_DEAL_LOAD);
+                adapter.setShowType(DISPATCH_DEAL_LOAD);//显示待装载列表
                 adapter.addDataList(list);
             } else if (curRadioButtonId == viewHolder.unload.getId()) {
-                filed(list,STORE_DEAL_UNLOAD);
-                adapter.setShowType(2);
+                filter(list,STORE_DEAL_UNLOAD);
+                adapter.setShowType(DISPATCH_DEAL_UNLOAD);//显示待卸货列表
                 adapter.addDataList(list);
             }
         }
@@ -199,20 +243,33 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
             }
         });
     }
+
     //过滤非指定状态门店
-    private void filed(List<DistributionPathBean> list, int state) {
+    private void filter(List<DistributionPathBean> list, int state) {
         Iterator<DistributionPathBean> iterator = list.iterator();
         while (iterator.hasNext()){
             if (iterator.next().getState()!=state) iterator.remove();
         }
     }
+
     /**
      * 扫描
      */
-    public void scanner(String boxNo) {
+    public void scanner(final String boxNo) {
         if (adapter != null && scanHandle.isDispatchExist()) {
             sendMessageToActivity(5);//震动
-            scanHandle.scannerHandler(boxNo);
+            pool.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        scanHandle.scannerHandler(boxNo);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        showSnackBar(viewHolder,"扫码异常");
+                    }
+                }
+            });
+
         }
     }
     //fragmrnt 在 resume时, activity回调此方法
@@ -231,21 +288,27 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         }
     }
 
-    private boolean selectTab(final int tabId){
-        if (curRadioButtonId != tabId) {
-            //页面跳转到指定tab列表
-            toUi(new Runnable() {
-                @Override
-                public void run() {
-                    viewHolder.radioGroup.check(tabId);
-                }
-            });
-            return false;
-        } else {
+    private boolean checkSelectTab(final int tabId){
+        return curRadioButtonId == tabId;
+    }
+
+    private void selectTab(int tabId){
+        if (checkSelectTab(tabId)) {
             //刷新列表
             onRefreshList();
+        } else {
+            //页面跳转到指定tab列表
+            switchTargetTab(tabId);
         }
-        return true;
+    }
+
+    private void switchTargetTab(final int tabId) {
+        toUi(new Runnable() {
+            @Override
+            public void run() {
+                viewHolder.radioGroup.check(tabId);
+            }
+        });
     }
 
     private void checkTab() {
@@ -257,6 +320,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         }
     }
 
+
     @Override
     public void onActivityCallback(String str) {
         if (isVisible()) { //是否正在显示中
@@ -264,16 +328,17 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         }
     }
     /**
-     * 子项选中 - 跳转详情页面
+     * list item 选中 - 勾选/取消勾选
      */
     @Override
     public void onItemClick(View view, final int position) {
         adapter.setSelectPosition(position);//设置适配器勾选图标选中
         adapter.notifyDataSetChanged();//更新
     }
+
     @Override
-    public void onClicked(View view, int position) {
-        memoryStoreBean.put("store", adapter.getDataList().get(position));
+    public void onClicked(View view, int pos) {
+        memoryStoreBean.put("store", adapter.getDataList().get(pos));
         startFragment(7);
     }
     //开始扫描门店
@@ -281,22 +346,33 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
     public boolean starScanStore(DispatchBean dispatchBean, DistributionPathBean distributionPathBean) {
 
         if (dispatchBean.getState() == DISPATCH_DEAL_LOAD) { //装载
-//            if (curRadioButtonId != viewHolder.load.getId()) {
-//                viewHolder.radioGroup.check(viewHolder.load.getId());
-//            }
-            return selectTab(viewHolder.load.getId());
-        }
-        if (dispatchBean.getState() == DISPATCH_DEAL_UNLOAD) {//卸载
 
-//            if (curRadioButtonId != viewHolder.unload.getId()) {
-//                viewHolder.radioGroup.check(viewHolder.unload.getId());
-//            }
-            boolean flag = selectTab(viewHolder.unload.getId());
+            boolean flag =  checkSelectTab(viewHolder.load.getId());
             if (flag){
-                int checkItemPos = adapter.getSelectPosition();
+                int checkItemPos = adapter.getCheckPos();
                 if (checkItemPos == -1) {
-                    showSnackBar(viewHolder, "请选中指定门店");
+                    scanHandle.loadBreak(true);
+                    showSnackBar(viewHolder, "请选中指定门店进行装货扫描");
+                } else {
+                    DistributionPathBean select = adapter.getData(checkItemPos);
+                    Ms.Holder.get().debug("装货扫描 "+ distributionPathBean.getCustomerAgency()+" - "+ select.getCustomerAgency());
+                    //选中的门店
+                    if (distributionPathBean.getCustomerAgency().equals(select.getCustomerAgency())) {
+                        Ms.Holder.get().debug("找到匹配的门店");
+                        return true;
+                    }
+                }
+            }else{
+                showSnackBar(viewHolder, "请在相关页面进行操作");
+            }
+        }else if (dispatchBean.getState() == DISPATCH_DEAL_UNLOAD) { //卸载
+
+            boolean flag = checkSelectTab(viewHolder.unload.getId());
+            if (flag){
+                int checkItemPos = adapter.getCheckPos();
+                if (checkItemPos == -1) {
                     scanHandle.unloadBreak(true);
+                    showSnackBar(viewHolder, "请选中指定门店进行卸货扫描");
                 } else {
                     //选中的门店
                     if (distributionPathBean.getCustomerAgency().equals(adapter.getData(checkItemPos).getCustomerAgency())) {
@@ -314,6 +390,8 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         //扫码触发数据发生改变
         onRefreshList();
     }
+
+    //改变门店状态
     @Override
     public void changeStoreState(DistributionPathBean distributionPathBean) {
         if (distributionPathBean.getState() == STORE_DEAL_UNLOAD) {
@@ -321,13 +399,12 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         } else if (distributionPathBean.getState() == STORE_DEAL_COMPLETE) {
             showSnackBar(viewHolder, distributionPathBean.getStoreName() + " 全部卸载");
         }
+        adapter.reset();//复位checkbox
     }
+
     //改变调度状态
     @Override
     public void changeDispatchState(DispatchBean dispatchBean) {
-//        Ms.Holder.get().info("调度状态改变 >> "+ dispatchBean.getState());
-//        Ms.Holder.get().info("调度状态改变\n" +
-//                ""+ AppUtil.javaBeanToJson(dispatchBean));
         if (dispatchBean.getState() == DISPATCH_DEAL_TAKEOUT) {
             showLongSnackBar(viewHolder, "点击启程,可请及时开启您的行程");
         } else if (dispatchBean.getState() == DISPATCH_DEAL_UNLOAD) {
@@ -346,14 +423,16 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
             showLongSnackBar(viewHolder, "已结束您的行程,您辛苦了");
         }
     }
+
     //扫码成功
     @Override
     public void boxScannerSuccess(String scanBarNo) {
         mediaBean.replay(R.raw.success);//发出警报
     }
+
     //没找到的扫码编号
     @Override
-    public void boxScanNoFount(String scanBarNo) {
+    public void boxScanNoFind(String scanBarNo) {
         mediaBean.replay(R.raw.nofount);//发出警报
         showLongSnackBar(viewHolder, AppUtil.stringForart("[ %s ]找不到相关信息",scanBarNo));
     }
@@ -362,6 +441,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
         mediaBean.replay(R.raw.warn);//发出警报
         showLongSnackBar(viewHolder, AppUtil.stringForart("[ %s ]重复扫码",scanBarNo));
     }
+
     @Override
     public void boxScanAbnormal(String scanBarNo) {
         mediaBean.replay(R.raw.warn);//发出警报
@@ -372,8 +452,7 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
      */
     @Override
     public boolean handworkStore(DispatchBean dispatchBean, DistributionPathBean distributionPathBean) {
-            int selectIndex = adapter.getSelectPosition();
-            Ms.Holder.get().info(selectIndex);
+            int selectIndex = adapter.getCheckPos();
             if (selectIndex!=-1){
                 DistributionPathBean distributionPathBean1 = adapter.getData(selectIndex);
                 if (distributionPathBean1.getCustomerAgency().equals(distributionPathBean.getCustomerAgency())){

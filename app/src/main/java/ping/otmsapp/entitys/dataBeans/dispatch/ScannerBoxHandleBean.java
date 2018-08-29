@@ -1,6 +1,7 @@
 package ping.otmsapp.entitys.dataBeans.dispatch;
 
 import ping.otmsapp.entitys.interfaces.ScanBoxHandleCallback;
+import ping.otmsapp.utils.Ms;
 
 import static ping.otmsapp.utils.STATE.BOX_DEAL_LOAD;
 import static ping.otmsapp.utils.STATE.BOX_DEAL_RECYCLE;
@@ -11,6 +12,7 @@ import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_LOAD;
 import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_TAKEOUT;
 import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_UNLOAD;
 import static ping.otmsapp.utils.STATE.STORE_DEAL_COMPLETE;
+import static ping.otmsapp.utils.STATE.STORE_DEAL_LOAD;
 import static ping.otmsapp.utils.STATE.STORE_DEAL_UNLOAD;
 
 /**
@@ -62,13 +64,13 @@ public class ScannerBoxHandleBean {
     }
 
     //扫码处理
-    public void  scannerHandler(String sacnBarNo){
+    public void  scannerHandler(String sacnBarNo) throws Exception{
 
         DispatchBean dispatchBean = getDispatchBean();
         if (dispatchBean!=null){
 
-            if (dispatchBean.getState() == DISPATCH_DEAL_LOAD){
-                //装箱处理 - 遍历全部门店
+            if (dispatchBean.getState() == DISPATCH_DEAL_LOAD || dispatchBean.getState() ==  DISPATCH_DEAL_TAKEOUT){
+                //装箱处理 - 遍历全部门店 - 根据勾选的门店装货
                 loadDispatch(sacnBarNo,dispatchBean);
             }
             else if (dispatchBean.getState() == DISPATCH_DEAL_UNLOAD){
@@ -83,21 +85,27 @@ public class ScannerBoxHandleBean {
         }
 
     }
+    //是否停止装货循环
+    private boolean isLoadBreak = false;
 
+    public void loadBreak(boolean b) {
+        isLoadBreak = b;
+    }
     /**
      * 扫码装箱
      * 处理调度单
      */
     private  void loadDispatch(String scanBarNo, DispatchBean dispatchBean){
-        boolean isFount = false;
-        boolean b;
+        isLoadBreak = false;
+        boolean isFind = false;
         for (DistributionPathBean distributionPathBean : dispatchBean.getDistributionPathBean()){
-                    b = loadStore(scanBarNo,dispatchBean,distributionPathBean);
-                    if (!isFount) isFount = b;
+                    isFind = loadStore(scanBarNo,dispatchBean,distributionPathBean);
+                    if (isLoadBreak || isFind) break;
             }
-        if (!isFount && scanBoxHandleCallback!=null){
+
+        if (!isLoadBreak && !isFind  && scanBoxHandleCallback!=null){
             //找不到箱子
-            scanBoxHandleCallback.boxScanNoFount(scanBarNo);
+            scanBoxHandleCallback.boxScanNoFind(scanBarNo);
         }
     }
 
@@ -106,22 +114,26 @@ public class ScannerBoxHandleBean {
      * 处理单个门店
      */
     private boolean loadStore(String scanBarNo, DispatchBean dispatchBean, DistributionPathBean distributionPathBean) {
-        boolean isFount = false;
-        if (scanBoxHandleCallback!=null){
+        if (dispatchBean.getState() != DISPATCH_DEAL_TAKEOUT && scanBoxHandleCallback!=null){
             boolean isContinue = scanBoxHandleCallback.starScanStore(dispatchBean,distributionPathBean); //开始扫描门店- 装货
-            if (!isContinue) return isFount;
+            if (!isContinue) return false;
         }
+        Ms.Holder.get().debug("处理: "+ scanBarNo+" " +distributionPathBean.getCustomerAgency());
+        boolean isFind = false;
         int curPos = dispatchBean.getLoadScanBoxIndex(); //当前已扫描总箱数
         int curStoreBoxIndex = distributionPathBean.getLoadScanIndex();//当前门店已扫描总箱数
 
         for (BoxBean box : distributionPathBean.getBoxNoList()) {
+            Ms.Holder.get().debug("箱子: "+box.getBarCode());
             //发现一个可扫码得箱子
             if (box.getBarCode().equals(scanBarNo) ) {
-                isFount = true;
-                if (box.getState() == BOX_DEAL_LOAD){
-                    if (scanBoxHandleCallback!=null){
-                        scanBoxHandleCallback.boxScannerSuccess(scanBarNo);//扫码成功
-                    }
+                isFind = true;
+                if (scanBoxHandleCallback!=null){
+                    scanBoxHandleCallback.boxScannerSuccess(scanBarNo);//扫码成功
+                }
+                int state = box.getState();
+                if (state == BOX_DEAL_LOAD){ //等待装货
+                    Ms.Holder.get().debug("装载箱子");
                     //箱子改为卸货状态的时间
                     box.setChangeToUnloadStateTime(System.currentTimeMillis());
                     //箱子 转为卸货状态
@@ -134,25 +146,51 @@ public class ScannerBoxHandleBean {
                     dispatchBean.setLoadScanBoxIndex(curPos);
                     //检测门店是否进入卸货状态
                     checkStoreIsToUnLoadState(distributionPathBean);
-
                     //检测调度单是否进入等待启程状态
-                    checkDispatchIsToTakeoutState(dispatchBean);
+                   checkDispatchIsToTakeoutState(dispatchBean);
+                    //保存调度单
+                    dispatchBean.save();
+                    if (scanBoxHandleCallback!=null){
+                        //通知调度单状态改变
+                        scanBoxHandleCallback.occurChange();
+                    }
+
+                }else if (state == BOX_DEAL_UNLOAD){ //等待卸货
+                    Ms.Holder.get().debug("装载箱子-状态回退");
+                    //箱子改为卸货状态的时间
+                    box.setChangeToUnloadStateTime(0);
+                    //箱子 转为装货状态
+                    box.setState(BOX_DEAL_LOAD);
+                    //改变当前门店已扫码数-1
+                    curStoreBoxIndex--;
+                    distributionPathBean.setLoadScanIndex(curStoreBoxIndex);
+                    //改变调度单总扫码数-1
+                    curPos--;
+                    dispatchBean.setLoadScanBoxIndex(curPos);
+                    //检测门店是否返回装货状态
+                    checkStoreIsToLoadState(distributionPathBean);
+                    //检测调度单是否返回装货状态
+                    checkDispatchIsToLoadState(dispatchBean);
                     //保存调度单
                     dispatchBean.save();
                     if (scanBoxHandleCallback!=null){
                         //通知改变
                         scanBoxHandleCallback.occurChange();
                     }
-
                 }
+                break;
             }
         }
-
-        return isFount;
+        Ms.Holder.get().debug("是否找到匹配箱子: "+isFind);
+        return isFind;
     }
+
+
+
+
     //检查门店是否进入卸货转台
     private void checkStoreIsToUnLoadState(DistributionPathBean distributionPathBean) {
-        //如果当前门店已扫码数量 = 此门店总数量 >> 改变状态为 等待卸货
+        //如果当前门店已扫码数量 = 此门店总数量 ->> 改变状态为 等待卸货
         if (distributionPathBean.getLoadScanIndex() == distributionPathBean.getBoxSum()){
             //此门店进入卸货状态
             distributionPathBean.setState(STORE_DEAL_UNLOAD);
@@ -162,9 +200,20 @@ public class ScannerBoxHandleBean {
             }
         }
     }
+
+    private void checkStoreIsToLoadState(DistributionPathBean distributionPathBean) {
+        //如果当前门店已扫码数量 < 此门店总数量 ->> 改变状态为 等待装货
+        if (distributionPathBean.getLoadScanIndex() < distributionPathBean.getBoxSum()){
+            //此门店进入卸货状态
+            distributionPathBean.setState(STORE_DEAL_LOAD);
+            if (scanBoxHandleCallback!=null){
+                //通知改变门店状态
+                //scanBoxHandleCallback.changeStoreState(distributionPathBean);
+            }
+        }
+    }
     //检查调度单是否进入等待启程状态
     private void checkDispatchIsToTakeoutState(DispatchBean dispatchBean) {
-        //如果调度单所有箱数 = 总箱数 >> 改变调度单状态()
         if (dispatchBean.getLoadScanBoxIndex() == dispatchBean.getStoreBoxSum()){
             //调度单 转为 等待启程
             dispatchBean.setState(DISPATCH_DEAL_TAKEOUT);
@@ -172,10 +221,23 @@ public class ScannerBoxHandleBean {
                 //通知改变调度单状态(调度单)
                 scanBoxHandleCallback.changeDispatchState(dispatchBean);
             }
+
         }
     }
+    private void checkDispatchIsToLoadState(DispatchBean dispatchBean) {
+        if (dispatchBean.getLoadScanBoxIndex() < dispatchBean.getStoreBoxSum()){
+            //调度单 转为 等待启程
+            dispatchBean.setState(DISPATCH_DEAL_LOAD);
+            if (scanBoxHandleCallback!=null){
+                //通知改变调度单状态(调度单)
+//                scanBoxHandleCallback.changeDispatchState(dispatchBean);
+            }
+        }
+    }
+
     //是否停止卸货循环
     private boolean isUnloadBreak = false;
+
     public void unloadBreak(boolean b) {
         isUnloadBreak = b;
     }

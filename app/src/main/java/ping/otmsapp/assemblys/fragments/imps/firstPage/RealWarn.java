@@ -91,7 +91,7 @@ public class RealWarn extends BaseFragment implements OnRecyclerViewAdapterItemC
                 AppUtil.stringForart("箱号:(%s)是否已成功处理?",
                         warnState.getBoxNumber()), new Action0() {
             @Override
-            public void onAction0() {
+            public void onAction() {
                 sendMessageToActivity(0,0);//打开进度条
                 isSendHandleMsg = true;
                 toIO(new Runnable() {

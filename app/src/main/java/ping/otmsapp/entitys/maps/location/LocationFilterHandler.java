@@ -21,7 +21,7 @@ public class LocationFilterHandler {
     private AMapLocation prevLoc;
 
     public LocationFilterHandler() {
-        Ms.Holder.get().fileAppend("\n\n"+AppUtil.formatUTC(System.currentTimeMillis(),null)+" 轨迹记录:\n");
+        Ms.Holder.get().writeFile("\n\n"+AppUtil.formatUTC(System.currentTimeMillis(),null)+" 轨迹记录:\n");
     }
 
     /**
@@ -74,7 +74,7 @@ public class LocationFilterHandler {
     public Tuple2<MTraceLocation,Float> convert(AMapLocation aMapLocation) throws Exception {
         curtLoc = aMapLocation;
         StringBuffer stringBuffer = getLocInfo(aMapLocation);
-        Ms.Holder.get().fileAppend(stringBuffer.toString());
+        Ms.Holder.get().writeFile(stringBuffer.toString());
             //如果当前 类型不符,精度过大,卫星数过低 不记录
             if ( curtLoc.getLocationType() != AMapLocation.LOCATION_TYPE_GPS //类型不符
                     || curtLoc.getAccuracy() > 50 //精度过大
@@ -85,7 +85,7 @@ public class LocationFilterHandler {
 
         if (prevLoc == null) {
             prevLoc = curtLoc;
-            Ms.Holder.get().fileAppend(stringBuffer.append("起点").toString());
+            Ms.Holder.get().writeFile(stringBuffer.append("起点").toString());
             return null;
         }
 
@@ -98,7 +98,7 @@ public class LocationFilterHandler {
             if ( (cDistance > curtLoc.getAccuracy()  && cBearing < 45 )
                     || (cDistance <curtLoc.getAccuracy() && (cBearing > 30 && cBearing < 60 ))  ){
                 stringBuffer.append("记录.");
-                Ms.Holder.get().fileAppend(stringBuffer.toString());
+                Ms.Holder.get().writeFile(stringBuffer.toString());
             }else{
                 return null;
             }

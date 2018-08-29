@@ -6,13 +6,43 @@
     android:background="@color/recycle_item_bg_color2"
     android:orientation="vertical">
     <!--title-->
-    <TextView
-        android:id="@+id/frg_recyclebox_title"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/recycle_itemView_title_h"
-        android:gravity="center"
-        style="@style/recycle_itemview_titleTextView"
-        android:text="回收列表"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/frg_recyclebox_title_tv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/recycle_itemView_title_h"
+            android:gravity="center"
+            style="@style/recycle_itemview_titleTextView"
+            android:text="回收列表"
+            />
+        <Button
+            android:id="@+id/frg_recyclebox_title_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:text="添加纸箱"
+            android:background="@drawable/btn_base_style_selector"
+            />
+        <Button
+            android:id="@+id/frg_recyclebox_title_btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:text="选择门店"
+            android:background="@drawable/btn_base_style_selector"
+            />
+    </FrameLayout>
+    <!--门店地址-->
+    <TextView
+        android:id="@+id/frg_recyclebox_title_tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前门店: 长沙岳麓区枫林三路店"
+        android:singleLine="true"
+        android:layout_margin="@dimen/cardview_compat_inset_shadow"
         />
     <!--输入框-->
     <include layout="@layout/include_layout_curtask_input"/>

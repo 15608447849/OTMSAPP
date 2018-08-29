@@ -12,7 +12,7 @@ import ping.otmsapp.entitys.dataBeans.localStore.LocalStore;
  * email: 793065165@qq.com
  */
 
-public class WarnTag extends LocalStore<WarnTag> {
+public class WarnTag extends LocalStore {
     private VehicleInfoBean vehicleInfoBean;
 
     //时间戳
@@ -40,6 +40,7 @@ public class WarnTag extends LocalStore<WarnTag> {
     public int getNumber(){
         return warnStateList == null? 0 : warnStateList.size();
     }
+
     public List<WarnState> getWarnStateList() {
         return warnStateList;
     }
@@ -65,13 +66,14 @@ public class WarnTag extends LocalStore<WarnTag> {
         this.vehicleInfoBean = vehicleInfoBean;
         this.current = System.currentTimeMillis();
     }
+
     public WarnTag reset(){
         current = remote;
         return this;
     }
     @NotNull
     @Override
-    public String getKey() {
-        return "预警信息"+super.getKey();
+    public String selfKey() {
+        return "预警信息"+super.selfKey();
     }
 }

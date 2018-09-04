@@ -43,7 +43,7 @@ public class HistoryDetail extends BaseFragment {
     public void onActivityCallback(MemoryStoreBean memoryStore) {
         super.onActivityCallback(memoryStore);
         final PathInfoBean pathInfoBean = memoryStore.get("history",null);
-        pool.post(new Runnable() {
+        toIO(new Runnable() {
             @Override
             public void run() {
 

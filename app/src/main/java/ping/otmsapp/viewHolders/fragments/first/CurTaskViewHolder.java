@@ -47,6 +47,9 @@ public class CurTaskViewHolder extends ViewHolderAbs {
     //提交货差
     @Rid(R.id.curtask_button_abnormal)
     public Button abnormal;
+
+    @Rid(R.id.curtask_button_loadAll)
+    public Button loadAll;
     //回收箱列表
     @Rid(R.id.curtask_button_addRecycle)
     public Button addRecycle;
@@ -62,6 +65,7 @@ public class CurTaskViewHolder extends ViewHolderAbs {
         back.setOnClickListener(listener);
         abnormal.setOnClickListener(listener);
         addRecycle.setOnClickListener(listener);
+        loadAll.setOnClickListener(listener);
     }
 
 

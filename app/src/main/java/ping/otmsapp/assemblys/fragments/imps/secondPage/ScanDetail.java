@@ -39,7 +39,7 @@ public class ScanDetail extends BaseFragment {
     @Override
     public void onActivityCallback(MemoryStoreBean memoryStore) {
         super.onActivityCallback(memoryStore);
-        pool.post(new Runnable() {
+        toIO(new Runnable() {
             @Override
             public void run() {
                 DistributionPathBean distributionPathBean = (DistributionPathBean) memoryStoreBean.remove("store");;

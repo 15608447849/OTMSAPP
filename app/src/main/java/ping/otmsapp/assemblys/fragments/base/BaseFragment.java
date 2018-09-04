@@ -16,6 +16,7 @@ import ping.otmsapp.entitys.background.IOThreadPool;
 import ping.otmsapp.entitys.dataBeans.sys.MemoryStoreBean;
 import ping.otmsapp.entitys.interfaces.OnFragmentToActivityMessage;
 import ping.otmsapp.entitys.interfaces.ViewHolderAbs;
+import ping.otmsapp.utils.AppUtil;
 
 /**
  * Created by user on 2018/2/27.
@@ -158,14 +159,24 @@ public class BaseFragment extends Fragment {
     }
 
     protected void toUi(Runnable r){
-        if (mHandler!=null){
-            mHandler.post(r);
+
+        if (!AppUtil.checkUIThread()){
+            if (mHandler!=null){
+                mHandler.post(r);
+            }
+        }else{
+            r.run();
         }
     }
     protected void toIO(Runnable r){
-        if (pool!=null){
-            pool.post(r);
-        }
+       if (AppUtil.checkUIThread()){
+           if (pool!=null){
+               pool.post(r);
+           }
+       }else{
+           r.run();
+       }
+
     }
 
     /**

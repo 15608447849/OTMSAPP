@@ -64,7 +64,7 @@ public class ScannerBoxHandleBean {
     }
 
     //扫码处理
-    public void  scannerHandler(String sacnBarNo) throws Exception{
+    public synchronized void  scannerHandler(String sacnBarNo) throws Exception{
 
         DispatchBean dispatchBean = getDispatchBean();
         if (dispatchBean!=null){
@@ -118,13 +118,11 @@ public class ScannerBoxHandleBean {
             boolean isContinue = scanBoxHandleCallback.starScanStore(dispatchBean,distributionPathBean); //开始扫描门店- 装货
             if (!isContinue) return false;
         }
-        Ms.Holder.get().debug("处理: "+ scanBarNo+" " +distributionPathBean.getCustomerAgency());
         boolean isFind = false;
         int curPos = dispatchBean.getLoadScanBoxIndex(); //当前已扫描总箱数
         int curStoreBoxIndex = distributionPathBean.getLoadScanIndex();//当前门店已扫描总箱数
 
         for (BoxBean box : distributionPathBean.getBoxNoList()) {
-            Ms.Holder.get().debug("箱子: "+box.getBarCode());
             //发现一个可扫码得箱子
             if (box.getBarCode().equals(scanBarNo) ) {
                 isFind = true;
@@ -133,7 +131,6 @@ public class ScannerBoxHandleBean {
                 }
                 int state = box.getState();
                 if (state == BOX_DEAL_LOAD){ //等待装货
-                    Ms.Holder.get().debug("装载箱子");
                     //箱子改为卸货状态的时间
                     box.setChangeToUnloadStateTime(System.currentTimeMillis());
                     //箱子 转为卸货状态
@@ -156,7 +153,6 @@ public class ScannerBoxHandleBean {
                     }
 
                 }else if (state == BOX_DEAL_UNLOAD){ //等待卸货
-                    Ms.Holder.get().debug("装载箱子-状态回退");
                     //箱子改为卸货状态的时间
                     box.setChangeToUnloadStateTime(0);
                     //箱子 转为装货状态
@@ -181,7 +177,6 @@ public class ScannerBoxHandleBean {
                 break;
             }
         }
-        Ms.Holder.get().debug("是否找到匹配箱子: "+isFind);
         return isFind;
     }
 
@@ -539,18 +534,23 @@ public class ScannerBoxHandleBean {
         return null;
     }
 
-    public String getDispatchStateString() {
+    public int getDispatchBeanState() {
         final DispatchBean dispatchBean = getDispatchBean();
         if (dispatchBean!=null) {
-            int state = dispatchBean.getState();
-            if (state == DISPATCH_DEAL_LOAD) return "等待装载";
-            if (state == DISPATCH_DEAL_TAKEOUT) return "等待启程";
-            if (state == DISPATCH_DEAL_UNLOAD) return "等待卸载";
-            if (state == DISPATCH_DEAL_BACK) return "等待返程";
-            if (state == DISPATCH_DEAL_COMPLETE) return "等待上传数据";
-
+            return dispatchBean.getState();
         }
-       return "没有调度单";
+        return -1;
+    }
+
+    public String getDispatchStateString() {
+            String str = "没有调度单";
+            int state =getDispatchBeanState();
+            if (state == DISPATCH_DEAL_LOAD) str = "等待装载";
+            if (state == DISPATCH_DEAL_TAKEOUT) str = "等待启程";
+            if (state == DISPATCH_DEAL_UNLOAD) str = "等待卸载";
+            if (state == DISPATCH_DEAL_BACK) str = "等待返程";
+            if (state == DISPATCH_DEAL_COMPLETE) str = "等待上传数据";
+            return str;
     }
 
 

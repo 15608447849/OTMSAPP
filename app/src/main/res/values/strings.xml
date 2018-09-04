@@ -16,8 +16,7 @@
     <string name="histask_recycle_item_transportline_text">运输线路:</string>
     <string name="histask_recycle_item_totalbox_text">总箱数:</string>
     <string name="histask_recycle_item_customernumber_text">客户数:</string>
-    <string name="curtask_btn_vehicleGo">车辆启程</string>
-    <string name="curtask_btn_vehicleBack">车辆返程</string>
+
 
     <string name="feightUnit">元</string>
     <string name="freightbill_displaybox_item_foreignexpense_text">异动费</string>
@@ -35,9 +34,11 @@
     <string name="realwarn_recycle_item_humidityRangeText">(正常范围: 25℃~36℃)</string>
     <string name="curtask_rgbutton_load">装载列表</string>
     <string name="curtask_rgbutton_unload">卸载列表</string>
-    <string name="curtask_rgbutton_recycle">回收列表</string>
     <string name="recycle_item_curTask_detail"><![CDATA[详情>>]]></string>
     <string name="curtask_button_abnormal">提交货差</string>
+    <string name="curtask_btn_vehicleGo">启程</string>
+    <string name="curtask_btn_vehicleBack">返程</string>
+    <string name="curtask_button_loadAll">装载全部</string>
     <string name="curtask_button_addRecyce">回收列表</string>
 
 </resources>

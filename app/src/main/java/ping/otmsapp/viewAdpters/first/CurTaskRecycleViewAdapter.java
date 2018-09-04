@@ -112,6 +112,7 @@ public class CurTaskRecycleViewAdapter extends RecycleAdapterAbs<DistributionPat
      */
     private int currentType = 0;
 
+
     public void setCurrentType(int currentType){
         this.currentType = currentType;
     }

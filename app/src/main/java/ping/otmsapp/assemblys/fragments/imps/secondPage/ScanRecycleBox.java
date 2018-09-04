@@ -92,7 +92,7 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
     
     //初始化数据
     private void listDataRefresh() {
-        pool.post(new Runnable() {
+        toIO(new Runnable() {
             @Override
             public void run() {
                 final RecycleBoxListBean recycleBoxListBean = new RecycleBoxListBean().fetch();

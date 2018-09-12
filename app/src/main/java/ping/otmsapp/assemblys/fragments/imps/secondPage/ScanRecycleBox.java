@@ -1,9 +1,11 @@
 package ping.otmsapp.assemblys.fragments.imps.secondPage;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ping.otmsapp.R;
 import ping.otmsapp.assemblys.fragments.base.BaseFragment;
 import ping.otmsapp.entitys.apps.MediaBean;
+import ping.otmsapp.entitys.dataBeans.dispatch.BoxBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.DispatchBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.DistributionPathBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.RecycleBoxBean;
@@ -25,6 +29,9 @@ import ping.otmsapp.entitys.dataBeans.dispatch.VehicleInfoBean;
 import ping.otmsapp.utils.AppUtil;
 import ping.otmsapp.viewAdpters.second.ScanRecycleBoxRecycleAdapter;
 import ping.otmsapp.viewHolders.fragments.second.ScanRecycleBoxViewHolder;
+
+import static ping.otmsapp.utils.STATE.BOX_DEAL_RECYCLE;
+import static ping.otmsapp.utils.STATE.STORE_DEAL_COMPLETE;
 
 /**
  * Created by Leeping on 2018/4/10.
@@ -42,6 +49,7 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
     private String[] storeNameArr;
     private String[] storeIdArr;
     private int storePos = 0;
+    private List<String> unloadBoxCodeList = new ArrayList<>();
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         if (viewHolder==null){
@@ -66,6 +74,8 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
             List<DistributionPathBean> list = dispatchBean.getDistributionPathBean();
             storeNameArr = new String[list.size()];
             storeIdArr = new String[list.size()];
+
+            //门店
             DistributionPathBean d;
             for (int i = 0; i< list.size();i++){
                 d = list.get(i);
@@ -73,6 +83,16 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
                 storeIdArr[i] =  d.getCustomerAgency();
                 if (storePos == 0){
                     if (d.getUnloadScanIndex() == d.getBoxSum()) storePos = i;
+                }
+                if (d.getState() == STORE_DEAL_COMPLETE){
+                    continue;
+                }
+                //查看当前没有卸载的箱子箱号
+                for (BoxBean boxBean : d.getBoxNoList()){
+                    if (boxBean.getState() == BOX_DEAL_RECYCLE){
+                        continue;
+                    }
+                    unloadBoxCodeList.add(boxBean.getBarCode());
                 }
             }
             
@@ -99,7 +119,11 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
 //                recycleBoxListBean.getList().clear();
 //                recycleBoxListBean.save();
                 if (recycleBoxListBean!=null && recycleBoxListBean.getList().size()>0){
-                    adapter.addDataList(recycleBoxListBean.getList(),true);
+                    adapter.clearAll();
+                    for (RecycleBoxBean recycleBoxBean : recycleBoxListBean.getList()){
+                        if (!recycleBoxBean.isBlank()) adapter.addData(recycleBoxBean);
+                    }
+
 
                     toUi(new Runnable() {
                         @Override
@@ -141,26 +165,30 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
         });
     }
 
-    private boolean scannerBox(String str) {
+    private void scannerBox(String str) {
         RecycleBoxListBean recycleBoxListBean = new RecycleBoxListBean().fetch();
         if (recycleBoxListBean==null){
             showSnackBar(viewHolder,"数据异常");
-            return false;
+            return;
         }
 
         if (getScanType() == -1) {
             showSnackBar(viewHolder,"请选择回收类型");
-            return false;
+            return;
         }
 
-        boolean flag = true;
-        if (!str.equals("")) {
-            flag = checkRepeatBox(str,recycleBoxListBean);
+        if (unloadBoxCodeList.contains(str)) {
+            showSnackBar(viewHolder,"箱号: "+ str+",请进行卸载操作再回收");
+            return;
         }
-        if (flag){
+
+        if (checkRepeatBox(str,recycleBoxListBean)) {
             createRecycleBox(str,recycleBoxListBean);
+            mediaBean.replay(R.raw.success);
+            showSnackBar(viewHolder,AppUtil.stringForart("[%s]已添加",str));
+            recycleBoxListBean.save();
+            listDataRefresh();
         }
-        return true;
     }
 
 
@@ -187,6 +215,7 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
     }
 
     private void createRecycleBox(String str,RecycleBoxListBean recycleBoxListBean) {
+        if (str==null) return;
         RecycleBoxBean recycleBoxBean = new RecycleBoxBean(
                 str,
                 getScanType(),
@@ -196,12 +225,6 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
 
         List<RecycleBoxBean> recycleBoxBeanList = recycleBoxListBean.getList();
         recycleBoxBeanList.add(0,recycleBoxBean);
-        mediaBean.replay(R.raw.success);
-        if (!str.equals("")){
-            showSnackBar(viewHolder,AppUtil.stringForart("[%s]已添加",str));
-        }
-        recycleBoxListBean.save();
-        listDataRefresh();
     }
 
     private int getScanType(){
@@ -228,27 +251,59 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
     }
 
     private void openNumberInput() {
+        if (getScanType() == -1) {
+            showSnackBar(viewHolder,"请选择纸箱回收类型");
+            return;
+        }
+
         final EditText editText = new EditText(mContext);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(7)});
         editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("请选择类型后请输入纸箱数量");//提示框标题
+        builder.setTitle("请输入纸箱数量");//提示框标题
         builder.setView(editText);
         builder.setPositiveButton("确定",//提示框的两个按钮
                 new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        final ProgressDialog progress = new ProgressDialog(mContext);
+                            progress.setIcon(R.drawable.ic_launcher);
+                            progress.setTitle("添加纸箱");
+                            progress.setMessage("请等待");
+                            progress.setIndeterminate(true);
+                            progress.setCancelable(false);
+                            progress.show();   //打开进度圈
                         toIO(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     int number = Integer.parseInt(editText.getText().toString());
-                                    for (int i = 0; i < number; i++){
-                                        if (!scannerBox("")) break;
+                                    RecycleBoxListBean recycleBoxListBean = new RecycleBoxListBean().fetch();
+                                    if (recycleBoxListBean==null){
+                                        showSnackBar(viewHolder,"数据异常");
+                                        return;
                                     }
-                                } catch (NumberFormatException ignored) {
-                                    showLongSnackBar(viewHolder,"添加失败");
+                                    if (recycleBoxListBean.getList().size()+ number > 1000) {
+                                        showSnackBar(viewHolder,"纸箱超过上限1000个");
+                                        return;
+                                    }
+                                    for (int i = 0; i < number; i++){
+                                        createRecycleBox("",recycleBoxListBean);
+                                    }
+                                    recycleBoxListBean.save();
+                                    listDataRefresh();
+                                    showLongSnackBar(viewHolder,"成功添加纸箱"+number+"个");
+                                } catch (Exception ignored) {
+                                    showLongSnackBar(viewHolder,"添加纸箱失败");
+                                }finally {
+                                   toUi(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           progress.cancel();
+                                       }
+                                   });
                                 }
                             }
                         });

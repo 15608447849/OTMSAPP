@@ -141,7 +141,14 @@ class DB private constructor() : IStore{
                 null)
         if (cursor.count>0){
             if (cursor.moveToFirst()){
-                return cursor.getString(0);
+                try {
+                    return cursor.getString(0);
+                } catch (e: Exception) {
+                    e.printStackTrace()
+//                    val sql = StringBuffer();
+//                    sql.append("update $DB_TABLE_NAME set $DB_KEY_V ='' where $DB_KEY_K = '$k'")
+//                    sqlHelper!!.writableDatabase.execSQL(sql.toString())
+                }
             }
         }
         return null

@@ -160,8 +160,14 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
                 }
             });
         }else if (vid == viewHolder.addRecycle.getId()){
-            //跳转到回收fragment
-            startFragment(8);
+            int state = scanHandle.getDispatchBeanState();
+            if (state>DISPATCH_DEAL_TAKEOUT){
+                //跳转到回收fragment
+                startFragment(8);
+            }else{
+                showLongSnackBar(viewHolder,"请装货启程在进行回收操作");
+            }
+
         }else if (vid == viewHolder.loadAll.getId()){
             //装载全部
             DialogBuilder.INSTANCE.dialogSimple(mContext, "确定将对勾选门店进行全部装载", new Action0() {
@@ -241,7 +247,9 @@ public class CurTask extends BaseFragment implements View.OnClickListener, Radio
             adapter.setCurrentType(state);
             List<DistributionPathBean> list = dispatchBean.getDistributionPathBean();//获取门店对象
             if (curRadioButtonId == viewHolder.load.getId()) {
-//                filter(list,STORE_DEAL_LOAD);
+                if (dispatchBean.getState()>DISPATCH_DEAL_TAKEOUT){
+                      filter(list,STORE_DEAL_LOAD);
+                }
                 adapter.setShowType(DISPATCH_DEAL_LOAD);//显示待装载列表
                 adapter.addDataList(list);
             } else if (curRadioButtonId == viewHolder.unload.getId()) {

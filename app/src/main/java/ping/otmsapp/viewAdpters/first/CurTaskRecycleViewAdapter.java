@@ -2,6 +2,7 @@ package ping.otmsapp.viewAdpters.first;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +13,7 @@ import ping.otmsapp.utils.AppUtil;
 import ping.otmsapp.viewHolders.recycycleItems.first.CurTaskRecycleItem;
 
 import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_LOAD;
+import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_TAKEOUT;
 import static ping.otmsapp.utils.STATE.DISPATCH_DEAL_UNLOAD;
 import static ping.otmsapp.utils.STATE.STORE_DEAL_COMPLETE;
 import static ping.otmsapp.utils.STATE.STORE_DEAL_LOAD;
@@ -51,25 +53,25 @@ public class CurTaskRecycleViewAdapter extends RecycleAdapterAbs<DistributionPat
                 if (distributionPathBean.getState() == STORE_DEAL_LOAD){
                     holder.showCheck();
                     if (distributionPathBean.getLoadScanIndex()<distributionPathBean.getBoxSum()){
-                        holder.scanNumberTv.setText(AppUtil.stringForart("待装载扫码数: [%d/%d]",distributionPathBean.getLoadScanIndex(),distributionPathBean.getBoxSum()));
+                        holder.scanNumberTv.setText(AppUtil.stringForart("扫码数量: [%d/%d]",distributionPathBean.getLoadScanIndex(),distributionPathBean.getBoxSum()));
                     }
                 }
-                if (distributionPathBean.getState() == STORE_DEAL_UNLOAD){
-                    holder.scanNumberTv.setText(AppUtil.stringForart("已全部装载: [%d/%d]",distributionPathBean.getLoadScanIndex(),distributionPathBean.getBoxSum()));
+                if (distributionPathBean.getState() == STORE_DEAL_UNLOAD){ //门店等待卸货
+
+                    holder.scanNumberTv.setText(AppUtil.stringForart("完成: [%d/%d]",distributionPathBean.getLoadScanIndex(),distributionPathBean.getBoxSum()));
                 }
+
             }
-            else
-            if (showType == DISPATCH_DEAL_UNLOAD){ //卸货列表
+            else if (showType == DISPATCH_DEAL_UNLOAD){ //卸货列表
 
                 if (distributionPathBean.getState() == STORE_DEAL_UNLOAD){
 
                     if (distributionPathBean.getUnloadScanIndex()<distributionPathBean.getBoxSum()){
-
-                        holder.scanNumberTv.setText(AppUtil.stringForart("可卸载扫码数: [%d/%d]",distributionPathBean.getUnloadScanIndex(),distributionPathBean.getLoadScanIndex()));
+                        holder.scanNumberTv.setText(AppUtil.stringForart("扫码数量: [%d/%d]",distributionPathBean.getUnloadScanIndex(),distributionPathBean.getLoadScanIndex()));
                     }
                 }
                 if (distributionPathBean.getState() == STORE_DEAL_COMPLETE){
-                    holder.scanNumberTv.setText(AppUtil.stringForart("已全部卸货: [%d/%d]",distributionPathBean.getUnloadScanIndex(),distributionPathBean.getBoxSum()));
+                    holder.scanNumberTv.setText(AppUtil.stringForart("完成: [%d/%d]",distributionPathBean.getUnloadScanIndex(),distributionPathBean.getBoxSum()));
                 }
 
             }

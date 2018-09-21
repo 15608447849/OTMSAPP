@@ -3,9 +3,11 @@ package ping.otmsapp.assemblys.activitys;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -25,11 +27,14 @@ import ping.otmsapp.entitys.dataBeans.sys.MemoryStoreBean;
 import ping.otmsapp.entitys.dataBeans.warn.WarnTag;
 import ping.otmsapp.entitys.interfaces.OnFragmentToActivityMessage;
 import ping.otmsapp.entitys.interfaces.OnHeartbeatMessageCallback;
-import ping.otmsapp.entitys.threads.ScannerThread;
+import ping.otmsapp.entitys.interfaces.ScannerCallback;
+import ping.otmsapp.entitys.threads.ScannerThread_SEUIC;
+import ping.otmsapp.entitys.threads.ScannerThread_UROVO;
 import ping.otmsapp.utils.Ms;
 import ping.otmsapp.viewControls.ProgressBarControl;
 import ping.otmsapp.viewHolders.activity.IndexViewHolder;
 
+import static android.device.KeyMapManager.KEY_TYPE_STARTAC;
 import static ping.otmsapp.utils.KEY.BUNDLE_KEY_TYPE;
 import static ping.otmsapp.utils.KEY.INTENT_KEY_BUNDLE;
 import static ping.otmsapp.utils.KEY.TYPE_BY_CLEAR_DISPATCH;
@@ -44,12 +49,13 @@ import static ping.otmsapp.utils.KEY.TYPE_BY_WARN;
  *
  */
 
-public class Index extends Activity  implements View.OnClickListener,OnFragmentToActivityMessage,ScannerThread.ScannerCallback, MyServiceConnection.ConnectedListener, OnHeartbeatMessageCallback {
+public class Index extends Activity  implements View.OnClickListener,OnFragmentToActivityMessage,ScannerCallback, MyServiceConnection.ConnectedListener, OnHeartbeatMessageCallback {
 
     private IndexViewHolder viewHolder;//关联布局文件
     private VibratorBean vibratorBean;//震动控制
     private PowerBean powerBean; //电源控制
-    private ScannerThread scannerThread;//扫描控制
+    private ScannerThread_SEUIC scannerThread;//扫描控制
+    private ScannerThread_UROVO scannerThread2;//扫描控制
     private MediaBean mediaBean;
     private ProgressBarControl progressBarControl;//进度条
     private MemoryStoreBean memoryStore;//内存存储-数据共享块
@@ -64,6 +70,7 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
         locationConn = new MyServiceConnection<>(this,LocationService.class);
         heartbeatConn = new MyServiceConnection<>(this,HeartbeatService.class);
         super.onCreate(savedInstanceState);
+        setContentView( R.layout.activity_index);
         memoryStore = new MemoryStoreBean(); //内存存储
         viewHolder = new IndexViewHolder(this); //视图持有
         setContentView(viewHolder.getLayoutFileRid()); //绑定视图
@@ -73,13 +80,21 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
         mediaBean = new MediaBean(this);//音乐播放
         powerBean = new PowerBean(this,getClass().getSimpleName());//电源控制
 
-        scannerThread = new ScannerThread(this);//扫描线程-扫码枪专用
-        scannerThread.setCallback(this);
-        scannerThread.setContinuationMode(true);
+        if (Build.VERSION.SDK_INT==22){
+            scannerThread = new ScannerThread_SEUIC(this);//扫描线程-扫码枪专用
+            scannerThread.setCallback(this);
+            scannerThread.setContinuationMode(true);
+        }
+        if(Build.VERSION.SDK_INT == 18){
+            scannerThread2 = new ScannerThread_UROVO(this);//扫描线程-扫码枪专用
+            scannerThread2.setCallback(this);
+        }
 
         indexFragmentAttr = new IndexFragmentAttr(getFragmentManager(),viewHolder.fragmentContainer.getId());//碎片关联
         showFragment(1);
     }
+
+
 
 
     @Override
@@ -87,17 +102,21 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
         super.onResume();
         //绑定服务
         bindServer();
+        if (scannerThread2!=null) scannerThread2.isEnable(true);
+
     }
     @Override
     protected void onPause() {
         super.onPause();
         //解除绑定
         unbindServer();
+        if (scannerThread2!=null) scannerThread2.isEnable(false);
     }
 
     @Override
     protected void onDestroy() {
-        scannerThread.close();
+        if (scannerThread!=null) scannerThread.close();
+        if (scannerThread2!=null) scannerThread2.close();
         viewHolder.destroy();
         progressBarControl.destroy();
         super.onDestroy();
@@ -334,6 +353,7 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);//注释可 阻止activity保存fragment的状态
     }
+
     //处理
     private void handlerBundle(Bundle b) {
         if (b!=null){
@@ -444,5 +464,6 @@ public class Index extends Activity  implements View.OnClickListener,OnFragmentT
     private void fragmentExit() {
         indexFragmentAttr.getCurTarget().onExit(true);
     }
+
 
 }

@@ -10,6 +10,7 @@
         android:id="@+id/curtask_rg_rbutton_load"
         android:text="@string/curtask_rgbutton_load"
         style="@style/inc_layout_curtask_tabitem_style" />
+
     <RadioButton
         android:id="@+id/curtask_rg_rbutton_unload"
         android:text="@string/curtask_rgbutton_unload"

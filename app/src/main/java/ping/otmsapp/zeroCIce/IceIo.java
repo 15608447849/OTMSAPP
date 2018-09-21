@@ -69,7 +69,8 @@ public class IceIo {
     private String[] readServerInfo() {
         //读取配置文件
         String iceTag = "LBXTMS/Locator";
-        String host = "192.168.1.120";
+//        String host = "192.168.1.120";
+        String host = "222.240.233.154";
         String port = "4061";
         try {
             File externalFilesDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES);

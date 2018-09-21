@@ -153,7 +153,6 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
     @Override
     public void onActivityCallback(String str) {
         scanner(str);
-
     }
 
     private void scanner(final String str) {
@@ -251,8 +250,12 @@ public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnChecke
     }
 
     private void openNumberInput() {
-        if (getScanType() == -1) {
+        if (getScanType() == -1 ) {
             showSnackBar(viewHolder,"请选择纸箱回收类型");
+            return;
+        }
+        if (getScanType() == 1){
+            showSnackBar(viewHolder,"不可选中的回收类型");
             return;
         }
 

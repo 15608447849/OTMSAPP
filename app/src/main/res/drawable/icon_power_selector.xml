@@ -3,7 +3,7 @@
     android:enterFadeDuration="1000"
     android:exitFadeDuration="1000">
 
-    <item android:state_pressed="false" android:drawable="@drawable/ic_power_normal"/>
-    <item android:state_pressed="true" android:drawable="@drawable/ic_power_press"/>
+    <item android:state_pressed="false" android:drawable="@drawable/icon_power_normal"/>
+    <item android:state_pressed="true" android:drawable="@drawable/icon_power_press"/>
 
 </selector>

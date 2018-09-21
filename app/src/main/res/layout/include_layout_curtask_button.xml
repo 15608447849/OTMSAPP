@@ -13,12 +13,10 @@
             android:id="@+id/curtask_button_loadAll"
             style="@style/include_curtask_menu_btn"
             android:text="@string/curtask_button_loadAll" />
-
         <Button
             android:id="@+id/curtask_button_abnormal"
             style="@style/include_curtask_menu_btn"
             android:text="@string/curtask_button_abnormal" />
-
         <Button
             android:id="@+id/curtask_button_addRecycle"
             style="@style/include_curtask_menu_btn"

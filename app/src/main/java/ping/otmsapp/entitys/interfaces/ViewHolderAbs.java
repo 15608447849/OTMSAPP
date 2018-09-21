@@ -25,6 +25,7 @@ public abstract class ViewHolderAbs {
         try {
             this.viewRoot = layoutInflater.inflate(layoutId,null);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e.toString());
         }
         autoInitView();

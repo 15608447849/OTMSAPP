@@ -23,8 +23,6 @@ public class LocationService extends Service implements LocationGather.GatherRes
     public class MBinder extends BinderAbs {
 
     }
-
-
     //地图定位点记录
     private LocationGather locationGarher;
     //高德地图定位

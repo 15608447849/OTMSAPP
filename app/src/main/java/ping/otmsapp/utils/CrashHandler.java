@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      *
      * @param context
      */
+
     public void init(Context context) {
         if (context==null) throw new NullPointerException("app context is null.");
         mContext = context;
@@ -54,6 +56,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         //打印设备信息
         Log.e(TAG,devInfoString());
     }
+
 
     private void collectDeviceInfo() {
         try {
@@ -68,9 +71,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         devInfos.put("系统生厂商", Build.BRAND);
         devInfos.put("硬件制造商", Build.MANUFACTURER);
         devInfos.put("型号", Build.MODEL);
-        devInfos.put("cpu_abi", Arrays.toString(Build.SUPPORTED_ABIS));
+//        devInfos.put("cpu_abi", Arrays.toString(Build.SUPPORTED_ABIS));
         devInfos.put("指纹",Build.FINGERPRINT);
-        devInfos.put("序列号",Build.SERIAL);
         devInfos.put("系统时间", AppUtil.formatUTC(Build.TIME,null));
         devInfos.put("安卓系统版本号",Build.VERSION.RELEASE);
         devInfos.put("安卓SDK",Build.VERSION.SDK_INT+"");

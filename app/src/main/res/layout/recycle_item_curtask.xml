@@ -37,7 +37,6 @@
             android:layout_below="@id/recycle_item_title_below_segmentLine"
             style="@style/recycle_item_content_container">
 
-
             <TextView
                 android:id="@+id/recycle_item_tv_order"
                 android:layout_width="@dimen/linelayoutNoSize"

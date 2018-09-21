@@ -36,7 +36,7 @@ public class LocationGather implements AMapLocationListener {
 
     public void saveTraceRecode(Tuple2<MTraceLocation,Float> tuple){
         //调度对象
-        TraceRecodeBean traceRecode  =getTrace();
+        TraceRecodeBean traceRecode  = getTrace();
         if (traceRecode!=null && traceRecode.getRecodeState()==RECODE_ING){
             traceRecode.getFiltrationList().add(tuple.getValue0()); //添加轨迹到过滤列表
             traceRecode.setMileage(traceRecode.getMileage()+tuple.getValue1());//距离

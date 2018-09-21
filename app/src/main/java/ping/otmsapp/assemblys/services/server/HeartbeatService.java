@@ -7,11 +7,13 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 import cn.hy.otms.rpcproxy.appInterface.DispatchInfo;
@@ -151,7 +153,8 @@ public class HeartbeatService extends Service {
             pendingIntentOp = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
         }
         AlarmManager am = (AlarmManager) getApplicationContext().getSystemService(ALARM_SERVICE);
-        am.setExact(AlarmManager.RTC_WAKEUP, getNextTime(),  pendingIntentOp);
+        if (Build.VERSION.SDK_INT>=19) am.setExact(AlarmManager.RTC_WAKEUP, getNextTime(),  pendingIntentOp);
+        else am.set(AlarmManager.RTC_WAKEUP, getNextTime(),  pendingIntentOp);
     }
 
     //停止闹钟
@@ -480,7 +483,6 @@ public class HeartbeatService extends Service {
                 forceDelete();
                 isChangeState = false;
             }
-
         }
 
         return isChangeState;

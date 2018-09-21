@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
         <RelativeLayout
             android:id="@+id/title_rl"
             android:layout_width="match_parent"
@@ -14,25 +14,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_title_logo"
-                android:layout_centerInParent="true"
-                />
-            <!--左边关闭按钮-->
+                android:layout_centerInParent="true" />
+            <!-- 左边关闭按钮 -->
             <ImageView
                 android:id="@+id/title_iv_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_power_selector"
+                android:src="@drawable/icon_power_selector"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/title_close_btn_margin_l"
-                android:visibility="gone"
-                 />
-            <!--右边菜单按钮-->
+                android:visibility="gone" />
+            <!-- 左边返回按钮 -->
             <ImageView
                 android:id="@+id/title_iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_arrow_back_selector"
+                android:src="@drawable/ic_arrow_back_selector"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/title_menu_btn_margin_r"

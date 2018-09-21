@@ -3,6 +3,7 @@ package ping.otmsapp.assemblys.fragments.base;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import ping.otmsapp.entitys.background.IOThreadPool;
 import ping.otmsapp.entitys.dataBeans.sys.MemoryStoreBean;
@@ -20,7 +22,7 @@ import ping.otmsapp.utils.AppUtil;
 
 /**
  * Created by user on 2018/2/27.
- *单页面应用 基础fragment
+ * 单页面应用 基础fragment
  * 定义 fragment-activity之间相互交互的接口
  */
 
@@ -188,7 +190,12 @@ public class BaseFragment extends Fragment {
         toUi(new Runnable() {
             @Override
             public void run() {
-                Snackbar.make(viewHolderAbs.getLayoutFileRid(), s,Snackbar.LENGTH_SHORT).show();
+                if (Build.VERSION.SDK_INT>=21){
+                    Snackbar.make(viewHolderAbs.getLayoutFileRid(), s,Snackbar.LENGTH_SHORT).show();
+                }else{
+                    AppUtil.toast(viewHolderAbs.getLayoutFileRid().getContext(),s);
+                }
+
             }
         });
     }
@@ -197,7 +204,12 @@ public class BaseFragment extends Fragment {
         toUi(new Runnable() {
             @Override
             public void run() {
-                Snackbar.make(viewHolderAbs.getLayoutFileRid(), s,Snackbar.LENGTH_LONG).show();
+                if (Build.VERSION.SDK_INT>=21){
+                    Snackbar.make(viewHolderAbs.getLayoutFileRid(), s,Snackbar.LENGTH_LONG).show();
+                }else{
+                    AppUtil.toast(viewHolderAbs.getLayoutFileRid().getContext(),s);
+                }
+
             }
         });
     }

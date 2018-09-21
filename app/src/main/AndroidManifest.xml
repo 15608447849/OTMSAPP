@@ -52,6 +52,7 @@
         <!-- 高德地图定位服务 -->
         <service android:name="com.amap.api.location.APSService"
             android:process=":remote"/>
+
         <!-- 本地定位服务 -->
         <service android:name=".assemblys.services.server.LocationService" />
         <!--&lt;!&ndash;心跳服务&ndash;&gt;-->

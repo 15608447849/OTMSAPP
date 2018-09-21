@@ -8,6 +8,7 @@ import com.seuic.scanner.ScannerFactory;
 import com.seuic.scanner.ScannerKey;
 
 import ping.otmsapp.entitys.apps.MediaBean;
+import ping.otmsapp.entitys.interfaces.ScannerCallback;
 
 /**
  * Created by Leeping on 2018/3/23.
@@ -15,13 +16,13 @@ import ping.otmsapp.entitys.apps.MediaBean;
  * 扫描控制
  */
 
-public class ScannerThread extends Thread implements DecodeInfoCallBack {
+public class ScannerThread_SEUIC extends Thread implements DecodeInfoCallBack {
     private com.seuic.scanner.Scanner scanner;
     private boolean flag = false;
 
     private MediaBean mediaBean;
     private ScannerCallback callback;
-    public ScannerThread(Context context) {
+    public ScannerThread_SEUIC(Context context) {
         setName("scanner-"+ getId());
         setDaemon(true);
         mediaBean = new MediaBean(context);
@@ -101,7 +102,5 @@ public class ScannerThread extends Thread implements DecodeInfoCallBack {
         this.callback = callback;
     }
 
-    public interface ScannerCallback{
-        void onScanner(String data);
-   }
+
 }

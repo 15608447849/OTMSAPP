@@ -50,24 +50,12 @@ class Login : Activity(), View.OnClickListener {
         viewHolder!!.setProgressIndeterminate(true)
         progressControl = ProgressBarControl(Handler(), viewHolder!!.progressBar)
         initUser()
-        check()
+        enter()
     }
 
     private fun initUser() {
         user = LoginUserBean().fetch() //创建用户对象
         if (user == null) user = LoginUserBean()
-    }
-
-
-    private fun check() {
-        //查看当前API等级是否大于6.0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkPermissions()) {
-                enter()
-            }
-        } else {
-            enter()
-        }
     }
 
     // 进入应用
@@ -76,75 +64,6 @@ class Login : Activity(), View.OnClickListener {
             toIndex();
         }
     }
-
-    //检查权限
-    @TargetApi(23)
-    private fun checkPermissions(): Boolean {
-        if (isPermissionsDenied) {
-            requestPermissions(permissions, SDK_PERMISSION_REQUEST)
-            return false;
-        }
-        return true
-    }
-
-    /** 权限申请回调
-     * grantResults 授权结果数组
-     * permissions 权限数组
-     */
-    @TargetApi(23)
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == SDK_PERMISSION_REQUEST) {
-            if (permissions.isEmpty() || grantResults.isEmpty()) {
-                AppUtil.toast(this@Login,"授权检测异常");
-                return
-            }
-            if (grantResults.isNotEmpty()) {
-                isPermissionsDenied = false //假设已授权
-                for (result in grantResults) {
-                    if (result == PackageManager.PERMISSION_DENIED) {
-                        isPermissionsDenied = true //发现有一个权限未授予,则无权限访问
-                        break
-                    }
-                }
-            } else {
-                isPermissionsDenied = true
-            }
-            if (isPermissionsDenied) {
-                openAppDetails()
-            } else {
-                enter()
-            }
-        }
-    }
-
-
-    /**
-     * 打开 APP 的详情设置
-     */
-    private fun openAppDetails() {
-        DialogBuilder.prompt(
-                this,
-                "应用授权",
-                "您拒绝了相关权限,将无法正常使用,请手动授予",
-                R.drawable.ic_launcher,
-                "手动授权",
-                DialogInterface.OnClickListener { dialog, which -> startSysSettingActivity() },
-                "退出",
-                DialogInterface.OnClickListener { dialog, which -> finish() })
-    }
-
-    private fun startSysSettingActivity() {
-        val intent = Intent()
-        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        intent.addCategory(Intent.CATEGORY_DEFAULT)
-        intent.data = Uri.parse("package:" + packageName)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-        startActivity(intent)
-        finish()
-    }
-
 
     //验证手机号码
     private fun validatePhone(phone: String): Boolean {
@@ -201,7 +120,7 @@ class Login : Activity(), View.OnClickListener {
             runOnUiThread {
                 progressControl!!.hideProgressBar()
             }
-            check()
+            enter()
         }
 
     }
@@ -217,17 +136,6 @@ class Login : Activity(), View.OnClickListener {
         viewHolder!!.destroy()
         super.onDestroy()
     }
-
-    private val SDK_PERMISSION_REQUEST = 127
-    private val SDK_POWER_REQUEST = 128
-    private var isPermissionsDenied = true //权限被拒绝
-
-    private val permissions = arrayOf(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, // 写sd卡
-            Manifest.permission.ACCESS_FINE_LOCATION, //GPS
-            Manifest.permission.ACCESS_COARSE_LOCATION, //NET LOCATION
-            Manifest.permission.READ_PHONE_STATE//获取手机信息
-    )
 
     private var viewHolder: LoginViewHolder? = null
     private var progressControl: ProgressBarControl? = null

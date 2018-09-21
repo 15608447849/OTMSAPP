@@ -7,6 +7,7 @@ package ping.otmsapp.entitys.dataBeans.dispatch;
  */
 
 public class BoxBean {
+
     //二维码
     private String barCode;
     /**

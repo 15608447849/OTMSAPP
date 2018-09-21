@@ -28,7 +28,6 @@ public class TraceRecodeBean extends LocalStore {
     //连续轨迹- 规则过滤后
     private ArrayList<MTraceLocation> filtrationList;
 
-
     //当前原始里程数 m
     private float mileage = 0.0f;
 

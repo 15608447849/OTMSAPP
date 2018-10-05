@@ -29,7 +29,7 @@ import static android.device.KeyMapManager.KEY_TYPE_STARTAC;
  * 扫描控制
  */
 
-public class ScannerThread_UROVO extends Thread   {
+public class ScannerThread_UROVO extends Thread {
 
     private Context context;
     private MediaBean mediaBean;

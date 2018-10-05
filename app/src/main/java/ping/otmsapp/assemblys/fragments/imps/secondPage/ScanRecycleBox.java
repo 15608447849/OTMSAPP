@@ -40,7 +40,6 @@ import static ping.otmsapp.utils.STATE.STORE_DEAL_COMPLETE;
 
 public class ScanRecycleBox  extends BaseFragment implements RadioGroup.OnCheckedChangeListener,View.OnClickListener {
 
-
     private ScanRecycleBoxViewHolder viewHolder;
     private ScanRecycleBoxRecycleAdapter adapter;
     private int curType = -1;

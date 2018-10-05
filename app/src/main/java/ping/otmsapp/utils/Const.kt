@@ -59,6 +59,7 @@ object STATE{
     const val BOX_DEAL_LOAD = 30;// 等待扫码装箱
     const val BOX_DEAL_UNLOAD = BOX_DEAL_LOAD+1;// 等待扫码卸货
     const val BOX_DEAL_RECYCLE = BOX_DEAL_UNLOAD+1; // 等待扫码回收
+
 }
 
 object RecodeTraceState {

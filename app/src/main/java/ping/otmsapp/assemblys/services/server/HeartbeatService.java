@@ -522,7 +522,7 @@ public class HeartbeatService extends Service {
                     dispatchBeanRemoteState.getStoreRemoteStateMap().put(distributionPathBean.getCustomerAgency(),STORE_DEAL_UNLOAD);
                     isChangeState = true;
                 }else if (remoteState == STORE_DEAL_UNLOAD){
-                    //添加路顺及里程数
+                    //添加路顺及里程数(废弃,不使用)
                     boolMessage = IceIo.get().setGpsMileageSynch(dispatchBean.getVehicleInfoBean().getCarNumber(),
                             distributionPathBean.getCustomerAgency(),
                             distributionPathBean.getSpecifiedOrder(),

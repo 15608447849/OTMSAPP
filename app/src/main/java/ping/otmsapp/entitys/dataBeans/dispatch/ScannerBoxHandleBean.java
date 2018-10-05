@@ -91,6 +91,7 @@ public class ScannerBoxHandleBean {
     public void loadBreak(boolean b) {
         isLoadBreak = b;
     }
+
     /**
      * 扫码装箱
      * 处理调度单

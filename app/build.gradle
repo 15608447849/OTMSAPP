@@ -18,7 +18,7 @@ android {
             minifyEnabled false
         }
     }
-
+    buildToolsVersion '28.0.2'
 }
 android {
     defaultConfig {
@@ -31,9 +31,8 @@ android {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"//Kotlin支持
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    //Kotlin支持
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'

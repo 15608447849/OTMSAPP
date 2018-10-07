@@ -47,6 +47,7 @@ public class WarnTag extends LocalStore {
 
     public void setWarnStateList(List<WarnState> warnStateList) {
         if (this.warnStateList!=null){
+            //bug: 不会更新已存在的数据
             for (WarnState newWarnState : warnStateList){
                 for (WarnState oldWarnState:this.warnStateList){
                     if (!newWarnState.getBoxNumber().equals(oldWarnState.getBoxNumber())){

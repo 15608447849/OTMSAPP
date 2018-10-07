@@ -13,7 +13,6 @@ import android.os.IBinder;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 import cn.hy.otms.rpcproxy.appInterface.DispatchInfo;
@@ -278,7 +277,7 @@ public class HeartbeatService extends Service {
             //计算路径
 //           planRoute(null);
             //获取预警
-            //getWarn();
+            getWarn();
             //轨迹是否需要同步
             synchTraceRecode();
             //异常同步

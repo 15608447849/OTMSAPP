@@ -23,9 +23,10 @@ public class HisTaskRecycleItem extends AutoRecycleViewHolder {
     public TextView boxNoTv;
     @Rid(R.id.recycle_item_tv_customNo_value)
     public TextView customTv;
-    @Rid(R.id.recycle_item_tv_pathAddr_value)
-    public TextView pathAddrTv;
+    @Rid(R.id.recycle_item_tv_fee_value)
+    public TextView feeTv;
     public HisTaskRecycleItem(View itemView) {
         super(itemView);
+        feeTv.setSelected(true);
     }
 }

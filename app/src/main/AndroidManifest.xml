@@ -78,5 +78,6 @@
         <activity android:name="ping.otmsapp.assemblys.activitys.Index"
             android:launchMode="singleInstance"
             />
+        <activity android:name=".assemblys.activitys.PictureUp" />
     </application>
 </manifest>

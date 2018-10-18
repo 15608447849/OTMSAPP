@@ -7,8 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ping.otmsapp.assemblys.fragments.base.BaseFragment;
-import ping.otmsapp.entitys.dataBeans.history.PathInfoBean;
+import ping.otmsapp.entitys.dataBeans.history.QueryInfoBean;
 import ping.otmsapp.entitys.dataBeans.sys.MemoryStoreBean;
+import ping.otmsapp.utils.AppUtil;
 import ping.otmsapp.viewAdpters.second.HistoryDetailRecycleViewAdapter;
 import ping.otmsapp.viewHolders.fragments.second.HistoryDetailViewHolder;
 
@@ -42,19 +43,23 @@ public class HistoryDetail extends BaseFragment {
     @Override
     public void onActivityCallback(MemoryStoreBean memoryStore) {
         super.onActivityCallback(memoryStore);
-        final PathInfoBean pathInfoBean = memoryStore.get("history",null);
+        final QueryInfoBean pathInfoBean = memoryStore.get("history",null);
         toIO(new Runnable() {
             @Override
             public void run() {
+                final String trans = pathInfoBean.getInitFreight()+"";
+                final String abor = pathInfoBean.getAbnormalFreight()+"";
+                final String tol = pathInfoBean.getTotalFreight()+"";
 
-                final StringBuffer stringBuffer = new StringBuffer();
-                stringBuffer.append(pathInfoBean.getStateStr()).append("\t").append(pathInfoBean.getStartAddr()).append(" → ").append(pathInfoBean.getEndAddr());
                 adapter.addDataList(pathInfoBean.getStoreInfoBeanList());
                 toUi(new Runnable() {
                     @Override
                     public void run() {
-                        viewHolder.pathName.setText(stringBuffer.toString());
+
+                        viewHolder.pathName.setText(AppUtil.stringForart("车次号: %s",pathInfoBean.getTrainNumber()));
+                        viewHolder.setText(tol,trans,abor);
                         adapter.notifyDataSetChanged();
+
                     }
                 });
             }

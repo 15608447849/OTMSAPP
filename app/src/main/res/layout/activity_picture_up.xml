@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <RelativeLayout
+       android:id="@+id/pictureup_rl"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+       <ImageButton
+           android:id="@+id/pictureup_ibtn_back"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:src="@drawable/ic_arrow_back_selector"
+           android:layout_margin="10dp"
+           />
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="图片选择上传"
+           android:layout_toEndOf="@id/pictureup_ibtn_back"
+           android:textColor="@color/text_main_clolor"
+           android:textSize="18sp"
+           android:textStyle="bold"
+           android:layout_centerVertical="true"
+           />
+
+   </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/pictureup_btn_take"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="拍照"
+        android:layout_toStartOf="@id/pictureup_btn_album"
+        android:layout_below="@id/pictureup_rl"
+        />
+
+    <Button
+        android:id="@+id/pictureup_btn_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="相册"
+        android:layout_below="@id/pictureup_rl"
+        />
+
+    <Button
+        android:id="@+id/pictureup_btn_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="上传"
+        android:layout_toEndOf="@id/pictureup_btn_album"
+        android:layout_below="@id/pictureup_rl"
+        />
+
+    <ImageView
+        android:id="@+id/pictureup_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/pictureup_btn_album"
+        android:layout_margin="10dp"
+        />
+</RelativeLayout>

@@ -8,20 +8,14 @@
             style="@style/recycle_item_title_container">
             <!--运输日期 ,状态-->
                 <TextView
-                    android:id="@+id/recycle_item_tv_transTime"
+                    android:id="@+id/recycle_item_tv_trainNo_value"
                     android:layout_width="@dimen/linelayoutNoSize"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="运输日期: 1997-02-02"
+                    android:text="车次号: 15600015215"
                     style="@style/recycle_itemview_titleTextView"/>
-                <TextView
-                    android:id="@+id/recycle_item_tv_trainNo_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/recycle_itemview_titleTextView2"
-                    android:text="[签收]"
-                    />
+
             </LinearLayout>
         <!--分割线-->
         <View
@@ -34,27 +28,25 @@
             android:layout_below="@id/recycle_item_title_below_segmentLine"
             style="@style/recycle_item_content_container">
             <TextView
-                android:id="@+id/recycle_item_tv_pathAddr_value"
-                android:layout_width="@dimen/linelayoutNoSize"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="长沙-广州"
-                />
-            <TextView
-                android:id="@+id/recycle_item_tv_trainNo_value"
+                android:id="@+id/recycle_item_tv_plate_value"
                 android:layout_width="@dimen/linelayoutNoSize"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="车次号:  15600015215"
+                android:text="车牌号:湘A000000"
                 />
-
+            <TextView
+                android:id="@+id/recycle_item_tv_mileage_value"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="里程: 500000米"
+                />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/recycle_item_content_container2"
             android:layout_below="@id/recycle_item_content_container"
             style="@style/recycle_item_content_container">
-
             <!--客户数-->
             <TextView
                 android:id="@+id/recycle_item_tv_customNo_value"
@@ -72,10 +64,66 @@
                 android:text="总箱数: 55"
                 />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/recycle_item_content_container3"
+            android:layout_below="@id/recycle_item_content_container2"
+            style="@style/recycle_item_content_container">
+            <!--应结费用-->
+            <TextView
+                android:id="@+id/recycle_item_tv_cost_value"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="应结费用: 10000.00"
+                />
+            <!--实结费用-->
+            <TextView
+                android:id="@+id/recycle_item_tv_actual_value"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="实结费用: 5500"
+                />
+        </LinearLayout>
         <!--分割线-->
         <View
+            android:id="@+id/recycle_item_content_below_segmentLine"
             style="@style/segment_line"
-            android:layout_below="@id/recycle_item_content_container2"
+            android:layout_below="@id/recycle_item_content_container3"
+            />
+        <LinearLayout
+            android:id="@+id/recycle_item_content_container4"
+            android:layout_below="@id/recycle_item_content_below_segmentLine"
+            style="@style/recycle_item_content_container">
+
+            <Button
+                android:id="@+id/recycle_item_btn_reject"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="驳回"
+                android:background="@drawable/btn_base_style_selector"
+                />
+            <Button
+                android:id="@+id/recycle_item_btn_sure"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="确定"
+                android:background="@drawable/btn_base_style_selector"
+                />
+            <Button
+                android:id="@+id/recycle_item_btn_update"
+                android:layout_width="@dimen/linelayoutNoSize"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="上传发票"
+                android:background="@drawable/btn_base_style_selector"
+                />
+        </LinearLayout>
+        <View
+            style="@style/segment_line"
+            android:layout_below="@id/recycle_item_content_container4"
             />
     </RelativeLayout>
 </FrameLayout>

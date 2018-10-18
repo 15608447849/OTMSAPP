@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.hy.otms.rpcproxy.appInterface.AppChg;
 import cn.hy.otms.rpcproxy.appInterface.AppFee;
 import cn.hy.otms.rpcproxy.appInterface.AppSchedvech;
 import cn.hy.otms.rpcproxy.appInterface.DispatchInfo;
@@ -15,6 +14,7 @@ import cn.hy.otms.rpcproxy.appInterface.DispatchSchedvech;
 import cn.hy.otms.rpcproxy.appInterface.Line;
 import cn.hy.otms.rpcproxy.appInterface.Lpn;
 import cn.hy.otms.rpcproxy.appInterface.Rcuorg;
+import cn.hy.otms.rpcproxy.appInterface.SureFeeInfo;
 import cn.hy.otms.rpcproxy.appInterface.WarnsDetailInfo;
 import ping.otmsapp.entitys.dataBeans.dispatch.BoxBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.DispatchBean;
@@ -23,7 +23,7 @@ import ping.otmsapp.entitys.dataBeans.dispatch.DistributionPathBean;
 import ping.otmsapp.entitys.dataBeans.dispatch.VehicleInfoBean;
 import ping.otmsapp.entitys.dataBeans.history.AbnormalFreightBillBean;
 import ping.otmsapp.entitys.dataBeans.history.BoxInfoBean;
-import ping.otmsapp.entitys.dataBeans.history.PathInfoBean;
+import ping.otmsapp.entitys.dataBeans.history.QueryInfoBean;
 import ping.otmsapp.entitys.dataBeans.history.StoreInfoBean;
 import ping.otmsapp.entitys.dataBeans.tuples.Tuple2;
 import ping.otmsapp.entitys.dataBeans.warn.WarnState;
@@ -96,11 +96,11 @@ public class Convert {
         return new Tuple2<>(dispatchBean, remoteStateSynceBean);
     }
 
-    public static List<PathInfoBean> historyRecodeTrans(AppSchedvech[] result) {
+    public static List<QueryInfoBean> historyRecodeTrans(AppSchedvech[] result) {
         //Ms.Holder.get().printObject(result);
 
-        List<PathInfoBean> historyTaskList = new ArrayList<>();
-        PathInfoBean pathInfoBean;
+        List<QueryInfoBean> historyTaskList = new ArrayList<>();
+        QueryInfoBean pathInfoBean;
         List<StoreInfoBean> storeInfoList;
         StoreInfoBean storeInfoBean;
         BoxInfoBean boxInfoBean;
@@ -113,7 +113,7 @@ public class Convert {
         AbnormalFreightBillBean abnormalFreightBillBean;
         for (AppSchedvech appSchedvech : result) {
 
-            pathInfoBean = new PathInfoBean();
+            pathInfoBean = new QueryInfoBean();
             line = appSchedvech.line;
             boxSum = 0;
             storeInfoList = new ArrayList<>();
@@ -123,11 +123,13 @@ public class Convert {
                 storeInfoBean.setSimName(rcuorg.cusabbname);
 
                 boxInfoList = new ArrayList<>();
+
                 for (Lpn lpn : rcuorg.lpn) {
                     boxInfoBean = new BoxInfoBean();
                     boxInfoBean.setBoxNo(lpn.lpn);
                     boxInfoList.add(boxInfoBean);
                 }
+
                 storeInfoBean.setBoxList(boxInfoList);
                 storeInfoBean.setSumBoxNo(boxInfoList.size());
                 storeInfoList.add(storeInfoBean);
@@ -136,8 +138,6 @@ public class Convert {
 
             pathInfoBean.setBoxSumNo(boxSum);
             pathInfoBean.setCustorNo(storeInfoList.size());
-            pathInfoBean.setStartAddr(line.startpn);
-            pathInfoBean.setEndAddr(line.endpn);
             pathInfoBean.setStoreInfoBeanList(storeInfoList);
             pathInfoBean.setCustorNo(storeInfoList.size());
 
@@ -146,21 +146,35 @@ public class Convert {
 
             if (appSchedvech.appFee.length>0){
                 appFee = appSchedvech.appFee[0];
-                abnormalFreightBillBeanList = new ArrayList<>();
-                for (AppChg appChg : appFee.appChgSeq){
-                    abnormalFreightBillBean =new AbnormalFreightBillBean();
-                    abnormalFreightBillBean.setCause(appChg.chgreason);
-                    abnormalFreightBillBean.setName(appChg.chgname);
-                    abnormalFreightBillBean.setFreight(appChg.chgamount);
-                    abnormalFreightBillBeanList.add(abnormalFreightBillBean);
-                }
                 pathInfoBean.setInitFreight(appFee.iniamount);
-                pathInfoBean.setAbnormalFreightBillBeanList(abnormalFreightBillBeanList);
                 pathInfoBean.setAbnormalFreight(appFee.chgFee);
                 pathInfoBean.setTotalFreight(appFee.totalFee);
             }
 
             pathInfoBean.setTimeStr(appSchedvech.time);
+            historyTaskList.add(pathInfoBean);
+        }
+        return historyTaskList;
+    }
+
+    public static List<QueryInfoBean> freightBillTrans(SureFeeInfo[] result) {
+
+        Ms.Holder.get().printObject(result);
+
+        List<QueryInfoBean> historyTaskList = new ArrayList<>();
+        QueryInfoBean pathInfoBean;
+
+        for (SureFeeInfo sureFeeInfo : result) {
+            pathInfoBean = new QueryInfoBean();
+
+            pathInfoBean.setTrainNumber(sureFeeInfo.schedtn+"");
+            pathInfoBean.setPlateNo(sureFeeInfo.vechid);
+            pathInfoBean.setMileage((sureFeeInfo.gpsm+sureFeeInfo.zcgpsm / 1000f));
+            pathInfoBean.setBoxSumNo(sureFeeInfo.sumCnt);
+            pathInfoBean.setCustorNo(sureFeeInfo.custom);
+            pathInfoBean.setCostFreight(sureFeeInfo.initFee/100f);
+            pathInfoBean.setActualFreight(sureFeeInfo.lastFee/100f);
+
             historyTaskList.add(pathInfoBean);
         }
         return historyTaskList;

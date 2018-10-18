@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import cn.hy.otms.rpcproxy.appInterface.AppSchedvech;
 import ping.otmsapp.assemblys.fragments.base.BaseFragment;
-import ping.otmsapp.entitys.dataBeans.history.PathInfoBean;
+import ping.otmsapp.entitys.dataBeans.history.QueryInfoBean;
 import ping.otmsapp.entitys.dataBeans.login.LoginUserBean;
 import ping.otmsapp.entitys.dataBeans.tuples.Tuple2;
 import ping.otmsapp.entitys.interfaces.OnRecyclerViewAdapterItemClickListener;
@@ -41,13 +41,13 @@ public class HisTask extends BaseFragment implements OnRecyclerViewAdapterItemCl
             monthsData = AppUtil.initMonths();
             curPos = monthsData.getValue1().size()-1;
             viewHolder = new HisTaskViewHolder(mContext);
-            viewHolder.spnner.niceSpinner.attachDataSource(monthsData.getValue1());//绑定月份
-            viewHolder.spnner.niceSpinner.addOnItemClickListener(this);
+            viewHolder.niceSpinner.attachDataSource(monthsData.getValue1());//绑定月份
+            viewHolder.niceSpinner.addOnItemClickListener(this);
             adapter = new HisTaskRecycleViewAdapter(mContext);
             adapter.setOnItemClickListener(this);
             viewHolder.list.recycle.setRecyclerDefaultSetting(adapter,1);
             viewHolder.list.refresh.setOnRefreshListener(this);
-            viewHolder.spnner.niceSpinner.setSelectedIndex(curPos);//选中最后一项
+            viewHolder.niceSpinner.setSelectedIndex(curPos);//选中最后一项
         }
         return viewHolder.getLayoutFileRid();
     }
@@ -120,7 +120,7 @@ public class HisTask extends BaseFragment implements OnRecyclerViewAdapterItemCl
      */
     @Override
     public void onItemClick(View view, int position) {
-       PathInfoBean pathInfoBean = adapter.getData(position);
+       QueryInfoBean pathInfoBean = adapter.getData(position);
         if (memoryStoreBean!=null) memoryStoreBean.put("history",pathInfoBean);
        startFragment(6,null);
     }

@@ -1,5 +1,6 @@
 package ping.otmsapp.entitys.dataBeans.history;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,32 +10,38 @@ import java.util.List;
  *
  */
 
-public class PathInfoBean {
+public class QueryInfoBean implements Serializable{
     private List<StoreInfoBean> storeInfoBeanList;
     //总客户数
     private int custorNo;
-    //此线路总箱数
+    //总箱数
     private int boxSumNo;
-    //开始点
-    private String startAddr;
-    //结束点
-    private String endAddr;
     //车次号
     private String trainNumber;
+    //车牌号
+    private String plateNo;
     //状态
     private int state;
     //状态 str
     private String stateStr;
+
     //初始运费
     private double initFreight;
-    //异动运费及原因
-    List<AbnormalFreightBillBean> abnormalFreightBillBeanList;
     //异动运费
     private double abnormalFreight;
     //总费用
     private double totalFreight;
     //签收时间
     private String timeStr;
+    //里程数
+    private double mileage;
+    //应结运费
+    private double costFreight;
+    //实结运费
+    private double actualFreight;
+
+
+
 
     public List<StoreInfoBean> getStoreInfoBeanList() {
         return storeInfoBeanList;
@@ -44,21 +51,6 @@ public class PathInfoBean {
         this.storeInfoBeanList = storeInfoBeanList;
     }
 
-    public String getStartAddr() {
-        return startAddr;
-    }
-
-    public void setStartAddr(String startAddr) {
-        this.startAddr = startAddr;
-    }
-
-    public String getEndAddr() {
-        return endAddr;
-    }
-
-    public void setEndAddr(String endAddr) {
-        this.endAddr = endAddr;
-    }
 
     public int getBoxSumNo() {
         return boxSumNo;
@@ -125,14 +117,6 @@ public class PathInfoBean {
         this.initFreight = initFreight;
     }
 
-    public List<AbnormalFreightBillBean> getAbnormalFreightBillBeanList() {
-        return abnormalFreightBillBeanList;
-    }
-
-    public void setAbnormalFreightBillBeanList(List<AbnormalFreightBillBean> abnormalFreightBillBeanList) {
-        this.abnormalFreightBillBeanList = abnormalFreightBillBeanList;
-    }
-
     public double getAbnormalFreight() {
         return abnormalFreight;
     }
@@ -155,6 +139,38 @@ public class PathInfoBean {
 
     public void setTimeStr(String timeStr) {
         this.timeStr = timeStr;
+    }
+
+    public double getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(double mileage) {
+        this.mileage = mileage;
+    }
+
+    public double getCostFreight() {
+        return costFreight;
+    }
+
+    public void setCostFreight(double costFreight) {
+        this.costFreight = costFreight;
+    }
+
+    public double getActualFreight() {
+        return actualFreight;
+    }
+
+    public void setActualFreight(double actualFreight) {
+        this.actualFreight = actualFreight;
+    }
+
+    public String getPlateNo() {
+        return plateNo;
+    }
+
+    public void setPlateNo(String plateNo) {
+        this.plateNo = plateNo;
     }
 }
 

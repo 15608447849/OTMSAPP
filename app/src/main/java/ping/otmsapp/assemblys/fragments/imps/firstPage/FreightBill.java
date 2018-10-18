@@ -1,5 +1,6 @@
 package ping.otmsapp.assemblys.fragments.imps.firstPage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,9 +11,11 @@ import android.widget.AdapterView;
 
 import java.util.ArrayList;
 
-import cn.hy.otms.rpcproxy.appInterface.AppSchedvech;
+import cn.hy.otms.rpcproxy.appInterface.SureFeeInfo;
+import ping.otmsapp.R;
+import ping.otmsapp.assemblys.activitys.PictureUp;
 import ping.otmsapp.assemblys.fragments.base.BaseFragment;
-import ping.otmsapp.entitys.dataBeans.history.PathInfoBean;
+import ping.otmsapp.entitys.dataBeans.history.QueryInfoBean;
 import ping.otmsapp.entitys.dataBeans.login.LoginUserBean;
 import ping.otmsapp.entitys.dataBeans.tuples.Tuple2;
 import ping.otmsapp.entitys.interfaces.OnRecyclerViewAdapterItemClickListener;
@@ -39,16 +42,16 @@ public class FreightBill extends BaseFragment implements OnRecyclerViewAdapterIt
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         if (viewHolder==null){
-            monthsData = AppUtil.initMonths();
-            curPos = monthsData.getValue1().size()-1;
+            monthsData = AppUtil.initMonthsDate();
+//            curPos = monthsData.getValue1().size()-1;
             viewHolder = new FreightBillViewHolder(mContext);
-            viewHolder.spnner.niceSpinner.attachDataSource(monthsData.getValue1());
-            viewHolder.spnner.niceSpinner.addOnItemClickListener(this);
+            viewHolder.niceSpinner.attachDataSource(monthsData.getValue1());
+            viewHolder.niceSpinner.addOnItemClickListener(this);
             adapter = new FreightBillRecycleViewAdapter(mContext);
             adapter.setOnItemClickListener(this);
             viewHolder.list.recycle.setRecyclerDefaultSetting(adapter,1);
             viewHolder.list.refresh.setOnRefreshListener(this);
-            viewHolder.spnner.niceSpinner.setSelectedIndex(curPos);//选中第一项
+            viewHolder.niceSpinner.setSelectedIndex(curPos);//选中第一项
         }
         return viewHolder.getLayoutFileRid();
     }
@@ -73,7 +76,6 @@ public class FreightBill extends BaseFragment implements OnRecyclerViewAdapterIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         curPos = position;
-        viewHolder.setText("","","");
         callServerData();
     }
     /**
@@ -87,7 +89,7 @@ public class FreightBill extends BaseFragment implements OnRecyclerViewAdapterIt
             public void run() {
                 LoginUserBean loginUserBean = new LoginUserBean().fetch();
                 if (loginUserBean!=null){
-                    AppSchedvech[] result = IceIo.get().getHistoryTask(
+                    SureFeeInfo[] result = IceIo.get().getFreightBill(
                             loginUserBean.getUserCode(),
                             monthsData.getValue0().get(curPos));
                     resultHandle(result,"暂无数据");
@@ -99,12 +101,12 @@ public class FreightBill extends BaseFragment implements OnRecyclerViewAdapterIt
         });
     }
     //结果处理
-    private void resultHandle(AppSchedvech[] result,String msg){
+    private void resultHandle(SureFeeInfo[] result,String msg){
 
         adapter.clearAll();
         try {
             if (result!=null && result.length>0) {
-                adapter.addDataList(Convert.historyRecodeTrans(result));
+                adapter.addDataList(Convert.freightBillTrans(result));
             }else{
                 showSnackBar(viewHolder,msg);//显示消息
             }
@@ -126,11 +128,43 @@ public class FreightBill extends BaseFragment implements OnRecyclerViewAdapterIt
      */
     @Override
     public void onItemClick(View view, int position) {
-        PathInfoBean pathInfoBean = adapter.getData(position);
-        final String trans = pathInfoBean.getInitFreight()+"";
-        final String abor = pathInfoBean.getAbnormalFreight()+"";
-        final String tol = pathInfoBean.getTotalFreight()+"";
-        viewHolder.setText(tol,trans,abor);
+        final QueryInfoBean pathInfoBean = adapter.getData(position);
+//        Ms.Holder.get().debug("view: "+ view);
 //        viewHolder.list.recycle.recycler.smoothScrollToPosition(0);
+        if (view.getId() == R.id.recycle_item_btn_reject){
+            toIO(new Runnable() {
+                @Override
+                public void run() {
+                    LoginUserBean loginUserBean = new LoginUserBean().fetch();
+                    IceIo.get().changeFeeState(loginUserBean.getUserCode(),pathInfoBean.getTrainNumber(),0);
+
+                    toUi(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                        }
+                    });
+                }
+            });
+
+        }else
+        if (view.getId() == R.id.recycle_item_btn_sure){
+            toIO(new Runnable() {
+                @Override
+                public void run() {
+                    LoginUserBean loginUserBean = new LoginUserBean().fetch();
+                    IceIo.get().changeFeeState(loginUserBean.getUserCode(),pathInfoBean.getTrainNumber(),2);
+                    toUi(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                        }
+                    });
+                }
+            });
+        }else if (view.getId() == R.id.recycle_item_btn_update){
+            //打开弹窗
+            startActivity(new Intent(mContext, PictureUp.class));
+        }
     }
 }

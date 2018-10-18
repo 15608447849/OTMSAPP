@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import java.util.Locale;
 
 import ping.otmsapp.R;
-import ping.otmsapp.entitys.dataBeans.history.PathInfoBean;
+import ping.otmsapp.entitys.dataBeans.history.QueryInfoBean;
 import ping.otmsapp.entitys.interfaces.RecycleAdapterAbs;
 import ping.otmsapp.viewHolders.recycycleItems.first.HisTaskRecycleItem;
 
@@ -19,7 +19,7 @@ import static ping.otmsapp.utils.AppUtil.stringForart;
  * 关联视图 HisTaskRecycleItem
  */
 
-public class HisTaskRecycleViewAdapter extends RecycleAdapterAbs<PathInfoBean,HisTaskRecycleItem> {
+public class HisTaskRecycleViewAdapter extends RecycleAdapterAbs<QueryInfoBean,HisTaskRecycleItem> {
 
     public HisTaskRecycleViewAdapter(Context context) {
         super(context);
@@ -35,11 +35,11 @@ public class HisTaskRecycleViewAdapter extends RecycleAdapterAbs<PathInfoBean,Hi
     public void onBindViewHolder(HisTaskRecycleItem holder, int position) {
 
         final int index = position;
-        PathInfoBean task = mDatas.get(position);
+        QueryInfoBean task = mDatas.get(position);
         holder.trainNoTv.setText(stringForart("车次号: %s",task.getTrainNumber()));
         holder.trainState.setText(stringForart("[ %s ]",task.getStateStr()));
-        holder.pathAddrTv.setText(stringForart("%s - %s",task.getStartAddr(),task.getEndAddr()));
-        holder.customTv.setText(stringForart("客户数:  %d",task.getCustorNo()));
+        holder.feeTv.setText(stringForart("总费用: %.2f",task.getTotalFreight()));
+        holder.customTv.setText(stringForart("客户数: %d",task.getCustorNo()));
         holder.boxNoTv.setText(String.format(Locale.getDefault(),"总箱数:  %d",task.getBoxSumNo()));
 
         // 如果设置了回调，则设置点击事件

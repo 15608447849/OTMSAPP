@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/recycle_itemview_titleTextView2"
-                android:text="[50]"
+                android:text="50箱"
                 />
         </LinearLayout>
         <View

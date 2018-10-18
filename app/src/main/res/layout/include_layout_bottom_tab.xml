@@ -182,7 +182,8 @@
         </FrameLayout>
         <!--轨迹-->
         <FrameLayout
-            style="@style/inc_bottom_item_block">
+            style="@style/inc_bottom_item_block"
+            android:visibility="gone">
             <LinearLayout
                 android:id="@+id/index_tab_pathtrail"
                 style="@style/inc_bottom_item_ll"

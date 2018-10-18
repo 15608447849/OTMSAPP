@@ -9,13 +9,19 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.util.Locale;
 
 import cn.hy.otms.rpcproxy.appInterface.AppInterfaceServicePrx;
 import cn.hy.otms.rpcproxy.appInterface.AppSchedvech;
 import cn.hy.otms.rpcproxy.appInterface.DispatchInfo;
+import cn.hy.otms.rpcproxy.appInterface.SureFeeInfo;
 import cn.hy.otms.rpcproxy.appInterface.WarnsInfo;
 import cn.hy.otms.rpcproxy.comm.cstruct.BoolMessage;
+import cn.hy.otms.rpcproxy.dts.FileUploadRequest;
+import cn.hy.otms.rpcproxy.dts.FileUploadRespond;
+import cn.hy.otms.rpcproxy.dts.IDataTransferServicePrx;
+import cn.hy.otms.rpcproxy.dts.TransferSequence;
 import cn.hy.otms.rpcproxy.sysmanage.SysManageServicePrx;
 import cn.hy.otms.rpcproxy.sysmanage.UpdateRequestPackage;
 import cn.hy.otms.rpcproxy.sysmanage.UpdateResponsePackage;
@@ -69,8 +75,8 @@ public class IceIo {
     private String[] readServerInfo() {
         //读取配置文件
         String iceTag = "LBXTMS/Locator";
-//        String host = "192.168.1.120";
-        String host = "222.240.233.154";
+        String host = "192.168.1.120";
+//        String host = "222.240.233.154";
         String port = "4061";
         try {
             File externalFilesDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES);
@@ -188,7 +194,7 @@ public class IceIo {
             AppInterfaceServicePrx aisPrx= iceClient.getServicePrx(AppInterfaceServicePrx.class);
             //用户码
             assert aisPrx != null;
-            return aisPrx.heartbeatByDriverC(convert(userid,schedth));
+//            return aisPrx.heartbeatByDriverC(convert(userid,schedth));
         }catch (Exception e){
             Ms.Holder.get().error(isErrorPrint,e);
         }
@@ -354,7 +360,38 @@ public class IceIo {
         }
         return null;
     }
-
+    /**
+     * 获取运费账单
+     */
+    public SureFeeInfo[] getFreightBill(final String userid, final String year_month_date){
+        try {
+            println("获取当前用户运费账单",userid+"",year_month_date);
+            checkNetwork();
+            AppInterfaceServicePrx aisPrx= iceClient.getServicePrx(AppInterfaceServicePrx.class);
+            //用户码,年月日(如20180303)
+            assert aisPrx != null;
+            return  aisPrx.appSureFeeInfo(convert(userid,year_month_date));
+        } catch (Exception e) {
+            Ms.Holder.get().error(isErrorPrint,e);
+        }
+        return null;
+    }
+    /*修改费用状态信息
+    @param 调度车次、状态、司机码、时间戳
+    状态：0-驳回，2-确认
+    BoolMessage updateFeeStatu(String[] params)*/
+    public void changeFeeState(String uid,String dispatchNo,int state){
+        try {
+            println("修改费用信息状态",uid,dispatchNo,state+"");
+            checkNetwork();
+            AppInterfaceServicePrx aisPrx= iceClient.getServicePrx(AppInterfaceServicePrx.class);
+            //用户码,年月日(如20180303)
+            assert aisPrx != null;
+            aisPrx.updateFeeStatu(convert(dispatchNo,state,uid,System.currentTimeMillis()));
+        } catch (Exception e) {
+            Ms.Holder.get().error(isErrorPrint,e);
+        }
+    }
 
     /**
      * 司机在途 查询预警信息
@@ -414,5 +451,40 @@ public class IceIo {
         return false;
     }
 
+
+    /**
+     * 上传图片
+     */
+    public boolean uploadImage(File image){
+        println("上传文件", image+"");
+        RandomAccessFile raf = null;
+        try{
+            IDataTransferServicePrx prx = iceClient.getServicePrx(IDataTransferServicePrx.class);
+            assert prx != null;
+            FileUploadRequest request =new FileUploadRequest("/sched/img/",image.getName(),image.length());
+            FileUploadRespond result = prx.request(request);
+            if(result ==null || result.array.length == 0) return false;
+
+            raf = new RandomAccessFile(image,"r");
+            byte[] data = null;
+            for(TransferSequence ts :result.array){
+                if(data == null) data = new byte[(int) ts.size];
+                raf.seek(ts.start);
+                raf.read(data,0,(int) ts.size);
+                prx.transfer(result.tag, ts, data);
+            }
+            prx.complete(result.tag);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (raf!=null) {
+                try {
+                    raf.close();
+                } catch (IOException ignored) { }
+            }
+        }
+        return false;
+    }
 
 }

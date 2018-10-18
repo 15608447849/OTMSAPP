@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -22,7 +23,10 @@ import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.Contract;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -30,6 +34,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import ping.otmsapp.entitys.dataBeans.tuples.Tuple2;
@@ -223,6 +228,7 @@ public class AppUtil {
      */
     public static Tuple2<ArrayList<String>, ArrayList<String>> initMonths() {
         Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH) + 1;
         ArrayList<String> list = new ArrayList<>();
@@ -233,7 +239,57 @@ public class AppUtil {
             } else {
                 list.add(year + "" + i);
             }
-            list2.add(AppUtil.stringForart("%d年\t%d月", year, i));
+            list2.add(AppUtil.stringForart("%d-%d", year, i));
+        }
+
+        return new Tuple2<>(list, list2);
+    }
+    /**
+     * 初始化年月日
+     *
+     * @return
+     */
+    public static Tuple2<ArrayList<String>, ArrayList<String>> initMonthsDate() {
+        Calendar cal = Calendar.getInstance();
+
+        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> list2 = new ArrayList<>();
+
+        int year,month,date;
+
+        StringBuilder stringBuffer = new StringBuilder();
+        StringBuilder stringBuffer2 = new StringBuilder();
+
+        for (int i = 0 ;i <= 31; i++){
+            if (i == 0) cal.setTime(new Date());
+            else cal.add(Calendar.DATE, -1);//今天向前移动i天的日期
+
+            year = cal.get(Calendar.YEAR);//年
+            month = cal.get(Calendar.MONTH) + 1;//月
+            date = cal.get(Calendar.DATE);
+
+            stringBuffer.setLength(0);
+            stringBuffer2.setLength(0);
+
+            stringBuffer.append(year);
+            stringBuffer2.append(year).append("-");
+
+            if (month < 10) {
+                stringBuffer.append("0").append(month);
+                stringBuffer2.append("0").append(month).append("-");
+            } else {
+                stringBuffer.append(month);
+                stringBuffer2.append(month).append("-");
+            }
+            if (date<10){
+                stringBuffer.append("0").append(date);
+                stringBuffer2.append("0").append(date);
+            } else {
+                stringBuffer.append(date);
+                stringBuffer2.append(date);
+            }
+            list.add(stringBuffer.toString());
+            list2.add(stringBuffer2.toString());
         }
 
         return new Tuple2<>(list, list2);
@@ -278,4 +334,21 @@ public class AppUtil {
         if (!checkUIThread() ) return;
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
     }
+
+    /**把bitmap 转file */
+    public static boolean saveBitmapFile(Bitmap bitmap, File file){
+         	try {
+         	    if (bitmap == null || file == null) return  false;
+         		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+         		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+         	    bos.flush();
+         	    bos.close();
+                return true;
+         	} catch (IOException e) {
+         	    e.printStackTrace();
+         	}
+         	return false;
+         	}
+
+
 }

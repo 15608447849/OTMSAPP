@@ -37,11 +37,13 @@
             android:layout_below="@id/recycle_item_title_below_segmentLine"
             style="@style/recycle_item_content_container">
             <TextView
-                android:id="@+id/recycle_item_tv_pathAddr_value"
+                android:id="@+id/recycle_item_tv_fee_value"
                 android:layout_width="@dimen/linelayoutNoSize"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="长沙-广州"
+                android:text="总费用:5000.00"
+                android:gravity="center"
+                style="@style/textview_marquee"
                 />
             <TextView
                 android:id="@+id/recycle_item_tv_customNo_value"
@@ -49,6 +51,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="客户数: 10"
+                android:gravity="center"
                 />
             <TextView
                 android:id="@+id/recycle_item_tv_boxSumNo_value"
@@ -56,6 +59,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="总箱数: 55"
+                android:gravity="center"
                 />
         </LinearLayout>
         <!--分割线-->

@@ -5,13 +5,14 @@
     android:orientation="vertical">
     <!-- 线路名-->
     <TextView
-        android:id="@+id/fragment_historydetail_tv_pathname"
+        android:id="@+id/fragment_historydetail_tv_trainNo_value"
         style="@style/recycle_itemview_titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/recycle_itemView_title_h"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="长沙 - 株洲" />
+        android:text="车次号:A0000000000000" />
+    <include layout="@layout/include_layout_freightbill_content" />
     <!-- 正文 list-->
     <include layout="@layout/include_layout_recycle" />
 </LinearLayout>

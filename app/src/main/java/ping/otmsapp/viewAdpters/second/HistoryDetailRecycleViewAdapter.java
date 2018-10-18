@@ -30,7 +30,7 @@ public class HistoryDetailRecycleViewAdapter  extends RecycleAdapterAbs<StoreInf
             StoreInfoBean storeInfoBean = getData(position);
             holder.storeName.setText(storeInfoBean.getSimName());
             holder.address.setText(storeInfoBean.getAddress());
-            holder.boxNo.setText(AppUtil.stringForart("[%d]",storeInfoBean.getSumBoxNo()));
+            holder.boxNo.setText(AppUtil.stringForart("%d箱",storeInfoBean.getSumBoxNo()));
             holder.boxList.setAdapter( new ArrayAdapter(context,android.R.layout.simple_list_item_1,storeInfoBean.getBoxList()));
     }
 }

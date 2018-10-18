@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ping.otmsapp.R;
-import ping.otmsapp.entitys.dataBeans.history.PathInfoBean;
+import ping.otmsapp.entitys.dataBeans.history.QueryInfoBean;
 import ping.otmsapp.entitys.interfaces.RecycleAdapterAbs;
 import ping.otmsapp.utils.AppUtil;
 import ping.otmsapp.viewHolders.recycycleItems.first.FreightBillRecycleItem;
@@ -15,7 +15,7 @@ import ping.otmsapp.viewHolders.recycycleItems.first.FreightBillRecycleItem;
  * 关联视图 - FreightBillRecycleItem
  */
 
-public class FreightBillRecycleViewAdapter extends RecycleAdapterAbs<PathInfoBean,FreightBillRecycleItem> {
+public class FreightBillRecycleViewAdapter extends RecycleAdapterAbs<QueryInfoBean,FreightBillRecycleItem> {
     public FreightBillRecycleViewAdapter(Context context) {
         super(context);
     }
@@ -28,25 +28,28 @@ public class FreightBillRecycleViewAdapter extends RecycleAdapterAbs<PathInfoBea
     @Override
     public void onBindViewHolder(FreightBillRecycleItem holder, int position) {
         final int index = position;
-        PathInfoBean task = mDatas.get(position);
+        QueryInfoBean task = mDatas.get(position);
 
-        holder.trainNoTv.setText(AppUtil.stringForart("车次: "+task.getTrainNumber()));
-        holder.trainState.setText(AppUtil.stringForart("[%s]",task.getStateStr()));
-        holder.boxNoTv.setText(AppUtil.stringForart("箱数: %d",task.getBoxSumNo()));
+        holder.trainNoTv.setText(AppUtil.stringForart("车次号: "+task.getTrainNumber()));
+        holder.boxNoTv.setText(AppUtil.stringForart("总箱数: %d",task.getBoxSumNo()));
         holder.customTv.setText(AppUtil.stringForart("客户数: %d",task.getCustorNo()));
-        holder.pathAddrTv.setText(AppUtil.stringForart("%s → %s",task.getStartAddr(),task.getEndAddr()));
-        holder.transTimeTv.setText(AppUtil.stringForart("运输日期: %s",task.getTimeStr()));
-
-
+        holder.plateTv.setText(AppUtil.stringForart("车牌号: %s",task.getPlateNo()));
+        holder.costFeeTv.setText(AppUtil.stringForart("应结费用: %s",task.getCostFreight()));
+        holder.actualFeeTv.setText(AppUtil.stringForart("实结费用: %s",task.getActualFreight()));
+        holder.mileageTv.setText(AppUtil.stringForart("总里程: %s",task.getMileage()));
 
         // 如果设置了回调，则设置点击事件
         if (listener!=null){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+           View.OnClickListener l =  new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(v,index);
                 }
-            });
+            };
+            holder.itemView.setOnClickListener(l);
+            holder.rejectBtn.setOnClickListener(l);
+            holder.sureBtn.setOnClickListener(l);
+            holder.updateBtn.setOnClickListener(l);
         }
     }
 

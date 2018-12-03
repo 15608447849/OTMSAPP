@@ -18,10 +18,8 @@ import cn.hy.otms.rpcproxy.appInterface.DispatchInfo;
 import cn.hy.otms.rpcproxy.appInterface.SureFeeInfo;
 import cn.hy.otms.rpcproxy.appInterface.WarnsInfo;
 import cn.hy.otms.rpcproxy.comm.cstruct.BoolMessage;
-import cn.hy.otms.rpcproxy.dts.FileUploadRequest;
-import cn.hy.otms.rpcproxy.dts.FileUploadRespond;
-import cn.hy.otms.rpcproxy.dts.IDataTransferServicePrx;
-import cn.hy.otms.rpcproxy.dts.TransferSequence;
+import cn.hy.otms.rpcproxy.dts.FileUploadInfo;
+import cn.hy.otms.rpcproxy.dts.IFileUploadServicePrx;
 import cn.hy.otms.rpcproxy.sysmanage.SysManageServicePrx;
 import cn.hy.otms.rpcproxy.sysmanage.UpdateRequestPackage;
 import cn.hy.otms.rpcproxy.sysmanage.UpdateResponsePackage;
@@ -459,21 +457,44 @@ public class IceIo {
         println("上传文件", image+"");
         RandomAccessFile raf = null;
         try{
-            IDataTransferServicePrx prx = iceClient.getServicePrx(IDataTransferServicePrx.class);
+            IFileUploadServicePrx prx = iceClient.getServicePrx(IFileUploadServicePrx.class);
             assert prx != null;
-            FileUploadRequest request =new FileUploadRequest("/sched/img/",image.getName(),image.length());
-            FileUploadRespond result = prx.request(request);
-            if(result ==null || result.array.length == 0) return false;
-
-            raf = new RandomAccessFile(image,"r");
-            byte[] data = null;
-            for(TransferSequence ts :result.array){
-                if(data == null) data = new byte[(int) ts.size];
-                raf.seek(ts.start);
-                raf.read(data,0,(int) ts.size);
-                prx.transfer(result.tag, ts, data);
+            FileUploadInfo info =new FileUploadInfo("/sched/img/",image.getName(),image.length());
+            String tag = prx.request(info);
+            if(tag ==null || tag.length() == 0) return false;
+            if(tag.equals("wait")){
+                Thread.sleep(2000);
+                return uploadImage(image);
             }
-            prx.complete(result.tag);
+            raf = new RandomAccessFile(image,"r");
+            byte[] bytes = new byte[1024 * 2];
+            long pos  = 0L;
+            long len = image.length();
+            int size = 0;
+
+            while (pos < len){
+
+                if (len - pos >= bytes.length) {
+                    size = bytes.length;
+                }else{
+                    size = (int)(len - pos);
+                }
+                //移动到起点
+                raf.seek(pos);
+
+                //读取数据
+                raf.read(bytes,0,size);
+
+                //写入数据
+                prx.transfer(tag,pos,bytes);
+
+                //起点下移
+                pos+=size;
+            }
+
+            raf.close();
+            prx.complete(tag);
+
             return true;
         }catch (Exception e){
             e.printStackTrace();

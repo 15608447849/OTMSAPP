@@ -54,6 +54,7 @@ class IceClient :Thread()  {
         if (pos <= 0) throw IllegalArgumentException("Invalid ObjectPrx class ,class name must end with Prx")
         return communicator.stringToProxy(serviceName.substring(0, pos))
     }
+
     //获取ICE 客户端连接
     private fun getIceCommunicator(): Ice.Communicator {
         if (iceCommunicator == null) {

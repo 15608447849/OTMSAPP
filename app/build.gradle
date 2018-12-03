@@ -10,7 +10,7 @@ android {
         applicationId "ping.otmsapp"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 3
+        versionCode 4
         versionName "autoer:793065165@qq.com"
     }
     buildTypes {
